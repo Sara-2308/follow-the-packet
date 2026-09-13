@@ -1,0 +1,4761 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Follow The Packet â€” An interactive digital experience tracing how the internet physically reaches your device. MITs ACM Student Chapter Challenge ACM/PS/19.">
+  <title>FOLLOW THE PACKET â€” How Does the Internet Reach You?</title>
+
+  <!-- Google Fonts Preconnect -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- Stylesheets -->
+  <style>
+/* ==========================================================================
+   FOLLOW THE PACKET â€” DESIGN SYSTEM & CORE STYLES
+   MITs ACM Student Chapter | Topic: ACM/PS/19
+   Visual Identity: Dark Emerald / Mint / Soft Lime / Editorial Serif
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=IBM+Plex+Mono:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap');
+
+:root {
+  /* Dark Forest Emerald Palette */
+  --bg-deep: #03120D;
+  --bg-surface: #061A13;
+  --bg-elevated: #08251B;
+  --bg-card: rgba(8, 37, 27, 0.75);
+  --bg-glass: rgba(6, 26, 19, 0.65);
+  --bg-glass-heavy: rgba(3, 18, 13, 0.85);
+
+  /* Luminous Accents */
+  --accent-emerald: #24B47E;
+  --accent-emerald-bright: #36D99A;
+  --accent-mint: #58F0B0;
+  --accent-lime: #B9F36A;
+  --accent-lime-pale: #E0FFB0;
+  --accent-amber: #F6C15B;
+  --accent-cyan: #38BDF8;
+
+  /* Typography Colors (High Contrast & Legibility) */
+  --text-primary: #F4F8F3;
+  --text-secondary: #A7C0B1;
+  --text-muted: #6C8A77;
+  --text-dim: #446150;
+  --text-mono: #58F0B0;
+
+  /* Border & Grid Accents */
+  --border-faint: rgba(54, 217, 154, 0.12);
+  --border-subtle: rgba(54, 217, 154, 0.22);
+  --border-bright: rgba(88, 240, 176, 0.45);
+  --border-highlight: rgba(185, 243, 106, 0.65);
+
+  /* Glow Effects */
+  --glow-emerald: 0 0 24px rgba(36, 180, 126, 0.4);
+  --glow-mint: 0 0 28px rgba(88, 240, 176, 0.45);
+  --glow-lime: 0 0 32px rgba(185, 243, 106, 0.5);
+  --glow-packet: 0 0 16px #58F0B0, 0 0 32px #24B47E, 0 0 48px rgba(185, 243, 106, 0.8);
+
+  /* Typography Fonts */
+  --font-display: 'Playfair Display', 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --font-editorial: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+  --font-mono: 'IBM Plex Mono', 'JetBrains Mono', Consolas, monospace;
+
+  /* Transitions & Radii */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  /* Spacing */
+  --section-padding: clamp(80px, 12vh, 160px);
+  --container-max: 1320px;
+}
+
+/* ==========================================================================
+   CSS Reset & Base Setup
+   ========================================================================== */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: dark;
+  font-size: 16px;
+  background-color: var(--bg-deep);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--text-primary);
+  background-color: var(--bg-deep);
+  line-height: 1.68;
+  overflow-x: hidden;
+  position: relative;
+  min-height: 100vh;
+}
+
+::selection {
+  background: var(--accent-emerald);
+  color: var(--bg-deep);
+}
+
+/* ==========================================================================
+   Ambient Background Grid, Vignette & Texture
+   ========================================================================== */
+
+.ambient-grid-overlay {
+  position: fixed;
+  inset: 0;
+  background-image: 
+    linear-gradient(to right, rgba(36, 180, 126, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(36, 180, 126, 0.035) 1px, transparent 1px);
+  background-size: 50px 50px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.ambient-radial-glow {
+  position: fixed;
+  inset: 0;
+  background: 
+    radial-gradient(circle at 50% 0%, rgba(36, 180, 126, 0.12) 0%, transparent 60%),
+    radial-gradient(circle at 15% 45%, rgba(88, 240, 176, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 85% 75%, rgba(185, 243, 106, 0.04) 0%, transparent 50%),
+    radial-gradient(circle at 50% 100%, rgba(6, 26, 19, 0.8) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.ambient-vignette {
+  position: fixed;
+  inset: 0;
+  box-shadow: inset 0 0 140px rgba(1, 8, 5, 0.9);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Floating interactive canvas for global packet trail */
+#packet-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* ==========================================================================
+   Typography Hierarchy
+   ========================================================================== */
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--text-primary);
+  letter-spacing: -0.015em;
+}
+
+p {
+  color: var(--text-secondary);
+  font-size: clamp(1rem, 1.1vw, 1.18rem);
+  font-weight: 400;
+  margin-bottom: 1.5rem;
+}
+
+.lead-text {
+  font-size: clamp(1.15rem, 1.4vw, 1.45rem);
+  font-weight: 400;
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--accent-mint);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 1rem;
+}
+
+.eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: var(--accent-lime);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--accent-lime);
+}
+
+.section-numeral-bg {
+  position: absolute;
+  top: -20px;
+  right: 5%;
+  font-family: var(--font-display);
+  font-size: clamp(6rem, 16vw, 15rem);
+  font-weight: 700;
+  color: rgba(54, 217, 154, 0.035);
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, var(--text-primary) 30%, var(--accent-mint) 70%, var(--accent-lime) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-outline {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--accent-mint);
+  text-shadow: 0 0 20px rgba(88, 240, 176, 0.35);
+}
+
+.mono-tag {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: var(--accent-mint);
+  background: rgba(36, 180, 126, 0.1);
+  border: 1px solid var(--border-subtle);
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ==========================================================================
+   Layout Containers
+   ========================================================================== */
+
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 3vw, 3rem);
+  position: relative;
+  z-index: 2;
+}
+
+.journey-section {
+  position: relative;
+  padding-block: var(--section-padding);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-bottom: 1px solid rgba(54, 217, 154, 0.07);
+}
+
+/* ==========================================================================
+   Navigation Bar & Heads-Up Display (HUD)
+   ========================================================================== */
+
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  background: rgba(3, 18, 13, 0.82);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border-faint);
+  transition: all 0.3s ease;
+}
+
+.nav-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 68px;
+  padding-inline: clamp(1rem, 3vw, 2.5rem);
+}
+
+.brand-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: var(--text-primary);
+}
+
+.brand-icon {
+  width: 24px;
+  height: 24px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brand-packet-node {
+  width: 8px;
+  height: 8px;
+  background: var(--accent-lime);
+  border-radius: 50%;
+  box-shadow: 0 0 12px var(--accent-lime);
+  animation: pulseNode 2s infinite ease-in-out;
+}
+
+.brand-ring {
+  position: absolute;
+  inset: -4px;
+  border: 1px dashed var(--accent-emerald-bright);
+  border-radius: 50%;
+  animation: rotateRing 8s linear infinite;
+}
+
+.brand-title {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  letter-spacing: 0.04em;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.brand-title span {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--accent-mint);
+  background: rgba(54, 217, 154, 0.12);
+  border: 1px solid var(--border-subtle);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 400;
+}
+
+/* Nav telemetry HUD pill */
+.nav-telemetry {
+  display: none;
+  align-items: center;
+  gap: 16px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  background: rgba(8, 37, 27, 0.6);
+  border: 1px solid var(--border-subtle);
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+}
+
+.telemetry-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.telemetry-item strong {
+  color: var(--accent-lime);
+  font-weight: 600;
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--accent-mint);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--accent-mint);
+  animation: blinkFast 1.2s infinite;
+}
+
+/* Nav Links */
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 2vw, 2rem);
+  list-style: none;
+}
+
+.nav-link {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: all 0.25s ease;
+  position: relative;
+  padding: 6px 2px;
+}
+
+.nav-link:hover, .nav-link.active {
+  color: var(--accent-mint);
+}
+
+.nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--accent-lime);
+  box-shadow: 0 0 8px var(--accent-lime);
+}
+
+/* Nav Actions (Sound & Quick Restart) */
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  background: rgba(8, 37, 27, 0.8);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.btn-icon:hover {
+  color: var(--accent-lime);
+  border-color: var(--accent-mint);
+  box-shadow: 0 0 12px rgba(88, 240, 176, 0.25);
+  transform: translateY(-1px);
+}
+
+.btn-icon svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+/* ==========================================================================
+   Persistent Journey Indicator (Vertical Timeline / Progress Bar)
+   ========================================================================== */
+
+.journey-progress-rail {
+  position: fixed;
+  left: clamp(1rem, 2.5vw, 2.5rem);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 90;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  pointer-events: auto;
+}
+
+.rail-track {
+  position: absolute;
+  left: 7px;
+  top: 10px;
+  bottom: 10px;
+  width: 2px;
+  background: rgba(54, 217, 154, 0.15);
+  z-index: 1;
+}
+
+.rail-progress-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 0%;
+  background: linear-gradient(to bottom, var(--accent-lime), var(--accent-mint));
+  box-shadow: 0 0 8px var(--accent-mint);
+  transition: height 0.2s linear;
+}
+
+.rail-step {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.rail-node {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--bg-deep);
+  border: 2px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s var(--ease-out-expo);
+}
+
+.rail-node-inner {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  transition: all 0.3s ease;
+}
+
+.rail-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  opacity: 0;
+  transform: translateX(-8px);
+  transition: all 0.25s ease;
+  white-space: nowrap;
+  pointer-events: none;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-faint);
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+}
+
+.rail-step:hover .rail-label,
+.rail-step.active .rail-label {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.rail-step.active .rail-node {
+  border-color: var(--accent-lime);
+  box-shadow: 0 0 16px var(--accent-mint);
+  transform: scale(1.25);
+}
+
+.rail-step.active .rail-node-inner {
+  background: var(--accent-lime);
+  box-shadow: 0 0 8px var(--accent-lime);
+}
+
+.rail-step.active .rail-label {
+  color: var(--accent-lime-pale);
+  border-color: var(--border-bright);
+}
+
+/* ==========================================================================
+   Buttons & Interactive Elements
+   ========================================================================== */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 14px 28px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.3s var(--ease-out-expo);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid transparent;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent-emerald) 0%, var(--accent-emerald-bright) 100%);
+  color: #02140D;
+  font-weight: 600;
+  box-shadow: 0 0 24px rgba(36, 180, 126, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--accent-mint) 0%, var(--accent-lime) 100%);
+  box-shadow: 0 0 35px rgba(88, 240, 176, 0.65), 0 0 10px var(--accent-lime);
+  transform: translateY(-2px);
+  color: #02120C;
+}
+
+.btn-secondary {
+  background: rgba(8, 37, 27, 0.7);
+  border-color: var(--border-bright);
+  color: var(--text-primary);
+  backdrop-filter: blur(8px);
+}
+
+.btn-secondary:hover {
+  background: rgba(36, 180, 126, 0.15);
+  border-color: var(--accent-mint);
+  color: var(--accent-mint);
+  box-shadow: 0 0 20px rgba(54, 217, 154, 0.25);
+  transform: translateY(-2px);
+}
+
+.btn-pulse-dot {
+  width: 6px;
+  height: 6px;
+  background: #02140D;
+  border-radius: 50%;
+  animation: pulseNode 1.5s infinite;
+}
+
+/* ==========================================================================
+   Editorial Cards & Fun Facts
+   ========================================================================== */
+
+.editorial-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: clamp(1.5rem, 2.5vw, 2.5rem);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.35s var(--ease-out-expo);
+}
+
+.editorial-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent-mint), transparent);
+  opacity: 0.6;
+}
+
+.editorial-card:hover {
+  border-color: var(--border-bright);
+  transform: translateY(-3px);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.6), 0 0 24px rgba(36, 180, 126, 0.15);
+}
+
+.fun-fact-card {
+  background: linear-gradient(135deg, rgba(8, 37, 27, 0.85) 0%, rgba(3, 18, 13, 0.95) 100%);
+  border: 1px solid var(--border-bright);
+  border-left: 4px solid var(--accent-lime);
+  border-radius: var(--radius-md);
+  padding: 1.5rem 1.75rem;
+  margin-top: 2rem;
+  position: relative;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+}
+
+.fun-fact-badge {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--accent-lime);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.fun-fact-text {
+  font-family: var(--font-editorial);
+  font-size: 1.22rem;
+  color: var(--text-primary);
+  line-height: 1.5;
+  margin: 0;
+  font-style: italic;
+}
+
+/* ==========================================================================
+   Keyframe Animations
+   ========================================================================== */
+
+@keyframes pulseNode {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.4); opacity: 0.7; }
+}
+
+@keyframes rotateRing {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes blinkFast {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.25; }
+}
+
+@keyframes floatElement {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes shimmerLine {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+/* ==========================================================================
+   Responsive Utilities
+   ========================================================================== */
+
+@media (min-width: 900px) {
+  .nav-telemetry {
+    display: flex;
+  }
+}
+
+@media (max-width: 768px) {
+  .journey-progress-rail {
+    display: none;
+  }
+  .nav-container {
+    height: 60px;
+  }
+  .nav-links {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ==========================================================================
+   FOLLOW THE PACKET â€” JOURNEY SECTIONS ART DIRECTION
+   Sections: 01 Hero, 02 Data Center, 03 Submarine Cables, 04 ISP, 05 Router, 06 Device, 09 Takeaway
+   ========================================================================== */
+
+/* ==========================================================================
+   01 â€” HERO SECTION
+   ========================================================================== */
+
+.hero-section {
+  min-height: 100vh;
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding-top: 100px;
+  padding-bottom: 80px;
+  overflow: hidden;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+  align-items: center;
+  position: relative;
+  z-index: 5;
+}
+
+@media (min-width: 1024px) {
+  .hero-grid {
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 4rem;
+  }
+}
+
+.hero-content {
+  position: relative;
+}
+
+.hero-badge-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 1.5rem;
+}
+
+.hero-title {
+  font-size: clamp(2.8rem, 6.2vw, 5.8rem);
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+  margin-bottom: 1.8rem;
+  text-transform: uppercase;
+}
+
+.hero-title .title-line {
+  display: block;
+}
+
+.hero-tagline {
+  font-family: var(--font-editorial);
+  font-size: clamp(1.4rem, 2.2vw, 2.1rem);
+  font-style: italic;
+  color: var(--accent-lime);
+  margin-bottom: 1.5rem;
+  line-height: 1.35;
+}
+
+.hero-description {
+  font-size: clamp(1.05rem, 1.25vw, 1.25rem);
+  color: var(--text-secondary);
+  max-width: 620px;
+  margin-bottom: 2.5rem;
+  line-height: 1.7;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 3.5rem;
+}
+
+/* Interactive Hero Visual Canvas Card */
+.hero-visual-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  max-width: 520px;
+  margin-inline: auto;
+  border-radius: var(--radius-xl);
+  background: radial-gradient(circle at center, rgba(6, 37, 26, 0.9) 0%, rgba(3, 18, 13, 0.95) 75%);
+  border: 1px solid var(--border-bright);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7), 0 0 35px rgba(36, 180, 126, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.hero-visual-canvas {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0;
+}
+
+.hero-visual-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.hero-visual-header, .hero-visual-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.hero-visual-footer strong {
+  color: var(--accent-mint);
+}
+
+/* Hero Bottom Route Strip */
+.hero-route-strip {
+  border-top: 1px solid var(--border-faint);
+  padding-top: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.route-steps-horizontal {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+}
+
+.route-step-pill {
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.route-step-pill span.num {
+  color: var(--accent-mint);
+  font-weight: 600;
+}
+
+.route-arrow {
+  color: var(--accent-lime);
+  opacity: 0.6;
+}
+
+.scroll-indicator {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.25s ease;
+}
+
+.scroll-indicator:hover {
+  color: var(--accent-lime);
+}
+
+.scroll-indicator-arrow {
+  animation: bounceDown 2s infinite;
+  color: var(--accent-lime);
+}
+
+@keyframes bounceDown {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(6px); }
+  60% { transform: translateY(3px); }
+}
+
+/* ==========================================================================
+   02 â€” DATA CENTER (THE JOURNEY BEGINS)
+   ========================================================================== */
+
+.dc-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+  align-items: center;
+}
+
+@media (min-width: 1024px) {
+  .dc-grid {
+    grid-template-columns: 1fr 1.15fr;
+    gap: 4rem;
+  }
+}
+
+.dc-rack-stage {
+  position: relative;
+  background: radial-gradient(circle at 60% 40%, rgba(8, 42, 30, 0.8) 0%, rgba(2, 14, 10, 0.95) 85%);
+  border: 1px solid var(--border-bright);
+  border-radius: var(--radius-lg);
+  padding: 2.25rem;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 0 40px rgba(36, 180, 126, 0.08);
+  overflow: hidden;
+}
+
+/* 3D Isometric Server Room Frame */
+.dc-rack-cluster {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.server-rack {
+  background: linear-gradient(180deg, #072218 0%, #03140E 100%);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  padding: 12px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.server-rack.active-rack {
+  border-color: var(--accent-mint);
+  box-shadow: 0 0 20px rgba(88, 240, 176, 0.25);
+}
+
+.rack-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-faint);
+  padding-bottom: 4px;
+}
+
+.rack-blade {
+  background: rgba(8, 37, 27, 0.9);
+  border: 1px solid rgba(54, 217, 154, 0.15);
+  border-radius: 3px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-inline: 6px;
+}
+
+.blade-leds {
+  display: flex;
+  gap: 3px;
+}
+
+.rack-led {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--accent-emerald);
+}
+
+.rack-led.active {
+  background: var(--accent-lime);
+  box-shadow: 0 0 6px var(--accent-lime);
+  animation: blinkFast 0.8s infinite alternate;
+}
+
+.rack-led.amber {
+  background: var(--accent-amber);
+  animation: blinkFast 1.4s infinite alternate;
+}
+
+/* Genesis Blade (Where Packet is Created) */
+.genesis-blade {
+  border-color: var(--accent-lime) !important;
+  background: rgba(36, 180, 126, 0.18) !important;
+  position: relative;
+}
+
+.genesis-blade::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  border: 1px solid var(--accent-lime);
+  box-shadow: 0 0 10px var(--accent-lime);
+  animation: pulseNode 2s infinite;
+}
+
+/* Packet Birth Animation Box */
+.packet-genesis-card {
+  background: rgba(3, 20, 14, 0.9);
+  border: 1px dashed var(--accent-mint);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  margin-top: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.genesis-visual {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.glowing-data-packet {
+  width: 28px;
+  height: 28px;
+  background: radial-gradient(circle at center, #FFFFFF 0%, var(--accent-lime) 45%, var(--accent-emerald) 80%);
+  border-radius: 6px;
+  box-shadow: var(--glow-packet);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: #02120C;
+  animation: floatElement 3s infinite ease-in-out;
+}
+
+.genesis-info {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+}
+
+.genesis-info .label {
+  color: var(--text-muted);
+  font-size: 0.68rem;
+  display: block;
+}
+
+.genesis-info .val {
+  color: var(--accent-mint);
+  font-weight: 600;
+}
+
+.fiber-optical-outflow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--accent-lime);
+}
+
+.fiber-cable-line {
+  width: 80px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent-lime), transparent);
+  position: relative;
+  overflow: hidden;
+}
+
+.fiber-cable-line::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 100%;
+  background: #FFF;
+  box-shadow: 0 0 8px var(--accent-lime);
+  animation: shimmerLine 1.5s infinite;
+}
+
+/* ==========================================================================
+   03 â€” UNDERSEA CABLES (ACROSS THE OCEAN)
+   ========================================================================== */
+
+.ocean-section {
+  position: relative;
+  background: radial-gradient(circle at 50% 30%, rgba(6, 32, 24, 0.7) 0%, rgba(2, 14, 10, 0.98) 75%);
+}
+
+.ocean-map-wrapper {
+  position: relative;
+  width: 100%;
+  background: #02100A;
+  border: 1px solid var(--border-bright);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 35px rgba(36, 180, 126, 0.15);
+  margin-top: 2.5rem;
+}
+
+.map-hud-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  background: rgba(6, 26, 19, 0.85);
+  border-bottom: 1px solid var(--border-subtle);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+
+.map-status-group {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.map-svg-container {
+  width: 100%;
+  height: 480px;
+  position: relative;
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .map-svg-container {
+    height: 340px;
+  }
+}
+
+/* SVG Map styling */
+.landmass {
+  fill: #062218;
+  stroke: var(--accent-emerald);
+  stroke-width: 1.2;
+  transition: all 0.3s ease;
+}
+
+.landmass:hover {
+  fill: #093325;
+}
+
+.bathymetry-contour {
+  stroke: rgba(54, 217, 154, 0.08);
+  stroke-width: 0.8;
+  stroke-dasharray: 3 3;
+  fill: none;
+}
+
+.subsea-cable {
+  fill: none;
+  stroke: rgba(54, 217, 154, 0.35);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 4 2;
+}
+
+.active-packet-cable {
+  stroke: var(--accent-mint);
+  stroke-width: 3.5;
+  stroke-dasharray: none;
+  filter: drop-shadow(0 0 8px rgba(88, 240, 176, 0.8));
+}
+
+.cable-pulse-marker {
+  fill: var(--accent-lime);
+  filter: drop-shadow(0 0 10px var(--accent-lime));
+}
+
+.landing-station-node {
+  fill: var(--accent-lime);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.landing-station-node:hover {
+  transform: scale(1.4);
+  fill: #FFF;
+}
+
+.map-node-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  fill: var(--text-primary);
+  font-weight: 500;
+  pointer-events: none;
+}
+
+/* Ocean Bottom Actions: Cable Peek Trigger */
+.ocean-action-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-top: 2rem;
+}
+
+/* Cable Peek Layer Exploder Container */
+.cable-exploder-container {
+  display: none;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-bright);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  margin-top: 2rem;
+  animation: fadeIn 0.4s var(--ease-out-expo);
+}
+
+.cable-exploder-container.visible {
+  display: block;
+}
+
+.cable-exploder-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  align-items: center;
+}
+
+@media (min-width: 900px) {
+  .cable-exploder-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.cable-layers-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cable-layer-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-radius: var(--radius-sm);
+  background: rgba(8, 37, 27, 0.6);
+  border: 1px solid var(--border-faint);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+}
+
+.cable-layer-row:hover, .cable-layer-row.active {
+  background: rgba(36, 180, 126, 0.2);
+  border-color: var(--accent-mint);
+  transform: translateX(6px);
+}
+
+.cable-layer-row.active {
+  box-shadow: 0 0 16px rgba(88, 240, 176, 0.25);
+}
+
+.layer-swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  display: inline-block;
+  margin-right: 10px;
+}
+
+/* ==========================================================================
+   04 â€” ISP (THE NETWORK OF NETWORKS)
+   ========================================================================== */
+
+.isp-topology-stage {
+  background: radial-gradient(circle at center, rgba(8, 42, 30, 0.85) 0%, rgba(2, 14, 10, 0.98) 80%);
+  border: 1px solid var(--border-bright);
+  border-radius: var(--radius-xl);
+  padding: 2.5rem 2rem;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+  margin-top: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.topology-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  position: relative;
+  z-index: 2;
+}
+
+.topology-node-card {
+  background: rgba(6, 26, 19, 0.8);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: relative;
+  transition: all 0.3s var(--ease-out-expo);
+  cursor: pointer;
+}
+
+.topology-node-card:hover, .topology-node-card.active-node {
+  border-color: var(--accent-mint);
+  box-shadow: 0 0 24px rgba(88, 240, 176, 0.25);
+  transform: translateY(-4px);
+}
+
+.node-icon-wrapper {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  background: rgba(36, 180, 126, 0.15);
+  border: 1px solid var(--border-bright);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-lime);
+}
+
+.node-title {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.node-desc {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.node-asn-badge {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--accent-mint);
+  align-self: flex-start;
+  padding: 2px 6px;
+  background: rgba(54, 217, 154, 0.1);
+  border-radius: 3px;
+}
+
+/* ISP Packet Route Flow Tracker */
+.isp-route-flow {
+  margin-top: 2rem;
+  padding: 1.25rem 1.5rem;
+  background: rgba(3, 18, 13, 0.9);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+}
+
+/* ==========================================================================
+   05 â€” YOUR ROUTER (THE LOCAL TRAFFIC COP)
+   ========================================================================== */
+
+.router-showcase {
+  background: radial-gradient(circle at center, rgba(8, 42, 30, 0.8) 0%, rgba(2, 14, 10, 0.95) 80%);
+  border: 1px solid var(--border-bright);
+  border-radius: var(--radius-xl);
+  padding: clamp(2rem, 3.5vw, 3.5rem);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7);
+  margin-top: 2rem;
+}
+
+.router-visual-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+  align-items: center;
+}
+
+@media (min-width: 1024px) {
+  .router-visual-grid {
+    grid-template-columns: 1fr 1.15fr;
+  }
+}
+
+/* Stylized Router Hardware Unit */
+.router-chassis {
+  background: linear-gradient(145deg, #0a2e21 0%, #03140E 100%);
+  border: 1px solid var(--border-bright);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  position: relative;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+}
+
+.router-antennas {
+  display: flex;
+  justify-content: space-between;
+  position: absolute;
+  top: -45px;
+  left: 15%;
+  right: 15%;
+}
+
+.antenna-stick {
+  width: 8px;
+  height: 50px;
+  background: linear-gradient(180deg, var(--accent-emerald-bright) 0%, #062218 100%);
+  border-radius: 4px 4px 0 0;
+  position: relative;
+}
+
+.antenna-signal-waves {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.signal-arc {
+  width: 20px;
+  height: 6px;
+  border-top: 2px solid var(--accent-lime);
+  border-radius: 50%;
+  opacity: 0.8;
+  animation: pulseWave 1.8s infinite;
+}
+
+.signal-arc:nth-child(2) {
+  width: 32px;
+  animation-delay: 0.3s;
+}
+
+@keyframes pulseWave {
+  0% { transform: scale(0.6); opacity: 0.2; }
+  50% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+
+.router-led-panel {
+  display: flex;
+  gap: 14px;
+  margin-top: 1.5rem;
+  border-top: 1px solid var(--border-faint);
+  padding-top: 1rem;
+}
+
+.router-led-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text-muted);
+}
+
+.led-bulb {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-mint);
+  box-shadow: 0 0 6px var(--accent-mint);
+  animation: blinkFast 1s infinite alternate;
+}
+
+/* Local Subnet Device Splitter */
+.subnet-devices-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.subnet-device-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  background: rgba(6, 26, 19, 0.7);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.3s var(--ease-out-expo);
+}
+
+.subnet-device-item:hover, .subnet-device-item.target-device {
+  background: rgba(36, 180, 126, 0.2);
+  border-color: var(--accent-lime);
+  transform: translateX(8px);
+  box-shadow: 0 0 20px rgba(185, 243, 106, 0.2);
+}
+
+.device-meta {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.device-icon-box {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-sm);
+  background: rgba(8, 37, 27, 0.8);
+  border: 1px solid var(--border-bright);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-mint);
+}
+
+.device-info h4 {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.device-info p {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.target-badge {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--accent-lime);
+  background: rgba(185, 243, 106, 0.15);
+  border: 1px solid var(--accent-lime);
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+/* ==========================================================================
+   06 â€” YOUR DEVICE (THE LAST METER)
+   ========================================================================== */
+
+.device-culmination-stage {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3.5rem;
+  align-items: center;
+}
+
+@media (min-width: 1024px) {
+  .device-culmination-stage {
+    grid-template-columns: 1.1fr 0.9fr;
+  }
+}
+
+/* CSS Rendered Futuristic Device Mockup */
+.device-mockup-wrapper {
+  position: relative;
+  background: radial-gradient(circle at center, rgba(6, 37, 26, 0.9) 0%, rgba(2, 14, 10, 0.98) 80%);
+  border: 1px solid var(--border-bright);
+  border-radius: var(--radius-xl);
+  padding: 2.5rem;
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.laptop-frame {
+  width: 100%;
+  max-width: 480px;
+  background: #0d281e;
+  border: 2px solid var(--border-bright);
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9), 0 0 40px rgba(36, 180, 126, 0.25);
+  position: relative;
+}
+
+.laptop-screen {
+  background: #020c08;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--border-faint);
+  aspect-ratio: 16 / 10;
+  display: flex;
+  flex-direction: column;
+}
+
+.browser-chrome {
+  background: #061e16;
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 6px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.browser-dots {
+  display: flex;
+  gap: 5px;
+}
+
+.browser-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.browser-address-bar {
+  flex: 1;
+  background: #03120D;
+  border-radius: 4px;
+  padding: 3px 10px;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--accent-mint);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.browser-viewport {
+  flex: 1;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  background: radial-gradient(circle at center, rgba(36, 180, 126, 0.12) 0%, transparent 80%);
+}
+
+.packet-unpack-stepper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.stepper-step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: rgba(8, 37, 27, 0.7);
+  border: 1px solid var(--border-faint);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  transition: all 0.3s ease;
+}
+
+.stepper-step.completed {
+  border-color: var(--accent-mint);
+  color: var(--accent-lime);
+}
+
+.stepper-check {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(36, 180, 126, 0.2);
+  border: 1px solid var(--accent-mint);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+}
+
+/* ==========================================================================
+   09 â€” FINAL TAKEAWAY & ECOSYSTEM MAP
+   ========================================================================== */
+
+.takeaway-section {
+  text-align: center;
+  position: relative;
+  background: radial-gradient(circle at 50% 50%, rgba(8, 42, 30, 0.8) 0%, var(--bg-deep) 75%);
+  padding-block: clamp(100px, 15vh, 180px);
+}
+
+.takeaway-heading {
+  font-size: clamp(2.4rem, 5.5vw, 5.2rem);
+  text-transform: uppercase;
+  font-weight: 700;
+  line-height: 1.05;
+  margin-bottom: 2rem;
+}
+
+.takeaway-lead {
+  font-family: var(--font-editorial);
+  font-size: clamp(1.3rem, 2vw, 1.8rem);
+  font-style: italic;
+  color: var(--text-primary);
+  max-width: 820px;
+  margin-inline: auto;
+  margin-bottom: 3.5rem;
+  line-height: 1.6;
+}
+
+.ecosystem-summary-flow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(12px, 2vw, 24px);
+  margin-bottom: 4rem;
+}
+
+.eco-stage-node {
+  background: rgba(6, 26, 19, 0.85);
+  border: 1px solid var(--border-bright);
+  border-radius: var(--radius-md);
+  padding: 1.25rem 1.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-width: 140px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease;
+}
+
+.eco-stage-node:hover {
+  border-color: var(--accent-lime);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 35px rgba(36, 180, 126, 0.25);
+}
+
+.eco-stage-node .stage-num {
+  color: var(--accent-lime);
+  font-size: 0.7rem;
+}
+
+.eco-arrow {
+  color: var(--accent-mint);
+  font-size: 1.2rem;
+  opacity: 0.6;
+}
+
+.takeaway-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.challenge-credit-footer {
+  margin-top: 5rem;
+  border-top: 1px solid var(--border-faint);
+  padding-top: 2rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.challenge-credit-footer strong {
+  color: var(--accent-mint);
+}
+
+/* ==========================================================================
+   FOLLOW THE PACKET â€” INTERACTIVE LABS & EXPLORERS
+   Sections: 07 Latency Lab, 08 AI Explorer, Cable Peek Modal, Controls
+   ========================================================================== */
+
+/* ==========================================================================
+   07 â€” LATENCY LAB (HOW FAST IS "INSTANT"?)
+   ========================================================================== */
+
+.latency-lab-section {
+  position: relative;
+  background: radial-gradient(circle at center, rgba(6, 37, 26, 0.85) 0%, var(--bg-deep) 80%);
+}
+
+.latency-showcase {
+  background: var(--bg-card);
+  border: 1px solid var(--border-bright);
+  border-radius: var(--radius-xl);
+  padding: clamp(1.75rem, 3.5vw, 3.5rem);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
+  margin-top: 2.5rem;
+}
+
+.latency-header-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px solid var(--border-faint);
+  padding-bottom: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.simulation-disclaimer-badge {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-amber);
+  background: rgba(246, 193, 91, 0.12);
+  border: 1px solid rgba(246, 193, 91, 0.35);
+  padding: 5px 12px;
+  border-radius: var(--radius-full);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.simulation-disclaimer-badge::before {
+  content: 'âš ï¸';
+  font-size: 0.75rem;
+}
+
+/* Preset Distance Radio / Buttons */
+.latency-presets-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-bottom: 2.5rem;
+}
+
+.latency-preset-btn {
+  background: rgba(6, 26, 19, 0.8);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.25s var(--ease-out-expo);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.latency-preset-btn:hover {
+  border-color: var(--accent-mint);
+  background: rgba(36, 180, 126, 0.15);
+  transform: translateY(-2px);
+}
+
+.latency-preset-btn.active {
+  border-color: var(--accent-lime);
+  background: rgba(88, 240, 176, 0.15);
+  box-shadow: 0 0 20px rgba(88, 240, 176, 0.2);
+}
+
+.preset-title {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.preset-dist {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--accent-mint);
+}
+
+/* Latency Big Display & Race Track */
+.latency-display-board {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  align-items: center;
+  margin-bottom: 2.5rem;
+}
+
+@media (min-width: 900px) {
+  .latency-display-board {
+    grid-template-columns: 300px 1fr;
+  }
+}
+
+.latency-stat-card {
+  background: linear-gradient(135deg, rgba(8, 42, 30, 0.9) 0%, rgba(3, 18, 13, 0.95) 100%);
+  border: 1px solid var(--border-bright);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+  position: relative;
+  overflow: hidden;
+}
+
+.latency-stat-card::after {
+  content: '';
+  position: absolute;
+  inset: -50%;
+  background: radial-gradient(circle at center, rgba(185, 243, 106, 0.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.latency-number {
+  font-family: var(--font-display);
+  font-size: clamp(3.5rem, 5.5vw, 4.8rem);
+  font-weight: 700;
+  color: var(--accent-lime);
+  line-height: 1;
+  margin-block: 0.5rem;
+  text-shadow: 0 0 24px rgba(185, 243, 106, 0.5);
+}
+
+.latency-unit {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* Visual Race Simulator */
+.race-tracks-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: rgba(3, 18, 13, 0.8);
+  border: 1px solid var(--border-faint);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+}
+
+.race-track-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.race-track-header {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+}
+
+.race-track-header .name {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.race-track-header .time {
+  color: var(--accent-mint);
+}
+
+.race-bar-bg {
+  height: 12px;
+  background: rgba(6, 26, 19, 0.8);
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid var(--border-faint);
+}
+
+.race-bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  background: linear-gradient(90deg, var(--accent-emerald), var(--accent-mint));
+  box-shadow: 0 0 10px var(--accent-mint);
+  width: 0%;
+  transition: width 0.8s var(--ease-out-expo);
+  position: relative;
+}
+
+.race-bar-fill.lime-bar {
+  background: linear-gradient(90deg, var(--accent-mint), var(--accent-lime));
+  box-shadow: 0 0 12px var(--accent-lime);
+}
+
+.race-bar-fill.amber-bar {
+  background: linear-gradient(90deg, var(--accent-amber), #F87171);
+  box-shadow: 0 0 10px rgba(248, 113, 113, 0.5);
+}
+
+/* Latency Metrics Grid */
+.latency-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  border-top: 1px solid var(--border-faint);
+  padding-top: 1.5rem;
+}
+
+.metric-box {
+  padding: 1rem;
+  background: rgba(6, 26, 19, 0.5);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-faint);
+}
+
+.metric-box .label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.metric-box .value {
+  font-family: var(--font-mono);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* ==========================================================================
+   08 â€” AI EXPLORER (ASK THE PACKET)
+   ========================================================================== */
+
+.ai-explorer-section {
+  position: relative;
+  background: radial-gradient(circle at 40% 50%, rgba(8, 42, 30, 0.8) 0%, var(--bg-deep) 75%);
+}
+
+.ai-explorer-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-bright);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
+  margin-top: 2.5rem;
+}
+
+.explorer-top-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 2rem;
+  background: rgba(6, 26, 19, 0.95);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.explorer-status-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--accent-mint);
+}
+
+/* Technical Depth Mode Toggle */
+.depth-mode-switch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(3, 18, 13, 0.8);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  padding: 3px;
+}
+
+.depth-toggle-btn {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.depth-toggle-btn.active {
+  background: var(--accent-mint);
+  color: var(--bg-deep);
+  font-weight: 600;
+}
+
+/* Question Selection & Answer Area */
+.explorer-body {
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+}
+
+@media (min-width: 992px) {
+  .explorer-body {
+    grid-template-columns: 340px 1fr;
+  }
+}
+
+.questions-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.questions-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.question-chip {
+  background: rgba(6, 26, 19, 0.75);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  text-align: left;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.25s var(--ease-out-expo);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.question-chip:hover {
+  border-color: var(--accent-mint);
+  color: var(--text-primary);
+  background: rgba(36, 180, 126, 0.12);
+  transform: translateX(4px);
+}
+
+.question-chip.active {
+  border-color: var(--accent-lime);
+  color: var(--accent-lime);
+  background: rgba(88, 240, 176, 0.15);
+  box-shadow: 0 0 16px rgba(88, 240, 176, 0.18);
+}
+
+.question-arrow {
+  color: var(--accent-mint);
+  font-size: 0.85rem;
+}
+
+/* Answer Display Terminal */
+.answer-terminal-card {
+  background: rgba(3, 18, 13, 0.9);
+  border: 1px solid var(--border-bright);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  min-height: 380px;
+}
+
+.active-query-heading {
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 1.8vw, 1.7rem);
+  color: var(--text-primary);
+  margin-bottom: 1.25rem;
+  line-height: 1.35;
+}
+
+.answer-narrative-text {
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  line-height: 1.75;
+  margin-bottom: 1.5rem;
+}
+
+.answer-diagram-schematic {
+  background: rgba(6, 26, 19, 0.6);
+  border: 1px dashed var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--accent-mint);
+  line-height: 1.6;
+}
+
+.answer-key-takeaway {
+  border-left: 3px solid var(--accent-lime);
+  padding-left: 14px;
+  font-family: var(--font-editorial);
+  font-size: 1.15rem;
+  font-style: italic;
+  color: var(--text-primary);
+}
+
+/* ==========================================================================
+   Cable Cross-Section Peek Modal
+   ========================================================================== */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(1, 8, 5, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 200;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.modal-backdrop.open {
+  display: flex;
+  animation: fadeIn 0.3s var(--ease-out-expo);
+}
+
+.modal-dialog {
+  width: 100%;
+  max-width: 860px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-bright);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.9), 0 0 40px rgba(36, 180, 126, 0.2);
+  overflow: hidden;
+  position: relative;
+}
+
+.modal-header {
+  padding: 1.25rem 2rem;
+  background: rgba(8, 37, 27, 0.9);
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-body {
+  padding: 2rem;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.modal-close-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.modal-close-btn:hover {
+  color: var(--accent-lime);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.98); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+</style>
+</head>
+<body>
+
+  <!-- Ambient Visual Layers (Grid, Glow & Particle Canvas) -->
+  <div class="ambient-grid-overlay" aria-hidden="true"></div>
+  <div class="ambient-radial-glow" aria-hidden="true"></div>
+  <div class="ambient-vignette" aria-hidden="true"></div>
+  <canvas id="packet-canvas" aria-hidden="true"></canvas>
+
+  <!-- ==========================================================================
+       SITE HEADER & LIVE TELEMETRY HUD
+       ========================================================================== -->
+  <header class="site-header" role="banner">
+    <div class="nav-container">
+      <a href="#hero" class="brand-wrapper" aria-label="Follow The Packet Home">
+        <div class="brand-icon">
+          <div class="brand-ring"></div>
+          <div class="brand-packet-node"></div>
+        </div>
+        <div class="brand-title">
+          FOLLOW THE PACKET <span>ACM/PS/19</span>
+        </div>
+      </a>
+
+      <!-- Live Telemetry HUD Pill -->
+      <div class="nav-telemetry" aria-label="Active Packet Telemetry">
+        <div class="telemetry-item">
+          <div class="status-dot"></div>
+          <span>PACKET_7A3F</span>
+        </div>
+        <div class="telemetry-item">
+          <span>HOP:</span> <strong id="hud-hop-val">00/05</strong>
+        </div>
+        <div class="telemetry-item">
+          <span>STAGE:</span> <strong id="hud-stage-val">INIT_REQUEST</strong>
+        </div>
+        <div class="telemetry-item">
+          <span>LATENCY:</span> <strong id="hud-latency-val">0 ms</strong>
+        </div>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav role="navigation" aria-label="Primary Navigation">
+        <ul class="nav-links">
+          <li><a href="#datacenter" class="nav-link">JOURNEY</a></li>
+          <li><a href="#isp" class="nav-link">NETWORK</a></li>
+          <li><a href="#latency-lab" class="nav-link">LATENCY</a></li>
+          <li><a href="#ai-explorer" class="nav-link">AI EXPLORER</a></li>
+        </ul>
+      </nav>
+
+      <!-- Nav Actions (Sound & Restart) -->
+      <div class="nav-actions">
+        <button id="btn-sound-toggle" class="btn-icon" title="Sound: Muted (Click to enable audio)" aria-label="Toggle ambient sound">
+          <svg id="sound-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M11 5L6 9H2V15H6L11 19V5Z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <line x1="23" y1="9" x2="17" y2="15" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="17" y1="9" x2="23" y2="15" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <button class="btn-icon btn-replay-journey" title="Replay Journey from Origin" aria-label="Replay journey">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M3 3v5h5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==========================================================================
+       PERSISTENT JOURNEY PROGRESS RAIL
+       ========================================================================== -->
+  <aside class="journey-progress-rail" aria-label="Journey Progress Track">
+    <div class="rail-track">
+      <div class="rail-progress-fill"></div>
+    </div>
+    <a href="#datacenter" class="rail-step" data-target="datacenter" aria-label="Step 01 Origin Data Center">
+      <div class="rail-node"><div class="rail-node-inner"></div></div>
+      <span class="rail-label">01 ORIGIN</span>
+    </a>
+    <a href="#ocean" class="rail-step" data-target="ocean" aria-label="Step 02 Ocean Cables">
+      <div class="rail-node"><div class="rail-node-inner"></div></div>
+      <span class="rail-label">02 OCEAN</span>
+    </a>
+    <a href="#isp" class="rail-step" data-target="isp" aria-label="Step 03 Internet Service Provider">
+      <div class="rail-node"><div class="rail-node-inner"></div></div>
+      <span class="rail-label">03 ISP</span>
+    </a>
+    <a href="#router" class="rail-step" data-target="router" aria-label="Step 04 Home Router">
+      <div class="rail-node"><div class="rail-node-inner"></div></div>
+      <span class="rail-label">04 ROUTER</span>
+    </a>
+    <a href="#device" class="rail-step" data-target="device" aria-label="Step 05 Your Device">
+      <div class="rail-node"><div class="rail-node-inner"></div></div>
+      <span class="rail-label">05 YOU</span>
+    </a>
+  </aside>
+
+  <main id="main-content">
+
+    <!-- ==========================================================================
+         01 â€” HERO SECTION
+         ========================================================================== -->
+    <section id="hero" class="journey-section hero-section">
+      <div class="container">
+        <div class="hero-grid">
+          <div class="hero-content">
+            <div class="hero-badge-group">
+              <span class="eyebrow">MITS ACM / PS / 19</span>
+              <span class="mono-tag">AN INTERACTIVE EXHIBIT</span>
+            </div>
+
+            <h1 class="hero-title">
+              <span class="title-line">HOW DOES</span>
+              <span class="title-line text-gradient">THE INTERNET</span>
+              <span class="title-line text-outline">REACH YOU?</span>
+            </h1>
+
+            <p class="hero-tagline">â€œYour click travels farther than you think.â€</p>
+
+            <p class="hero-description">
+              You tap a link. Somewhere far away, a machine receives the request, breaks information into packets, and sends those packets across a global network of fiber, routers and cables until the response reaches your screen.
+            </p>
+
+            <div class="hero-actions">
+              <button class="btn btn-primary btn-start-journey">
+                <span>START THE JOURNEY</span>
+                <span class="btn-pulse-dot"></span>
+              </button>
+              <a href="#ocean" class="btn btn-secondary">
+                <span>SEE THE ROUTE</span>
+                <span style="color:var(--accent-lime);">â†’</span>
+              </a>
+            </div>
+
+            <div class="hero-route-strip">
+              <div class="route-steps-horizontal">
+                <span class="route-step-pill"><span class="num">01</span> ORIGIN</span>
+                <span class="route-arrow">â†’</span>
+                <span class="route-step-pill"><span class="num">02</span> OCEAN</span>
+                <span class="route-arrow">â†’</span>
+                <span class="route-step-pill"><span class="num">03</span> ISP</span>
+                <span class="route-arrow">â†’</span>
+                <span class="route-step-pill"><span class="num">04</span> ROUTER</span>
+                <span class="route-arrow">â†’</span>
+                <span class="route-step-pill"><span class="num">05</span> YOU</span>
+              </div>
+              <a href="#datacenter" class="scroll-indicator" aria-label="Scroll down to begin">
+                <span>SCROLL TO FOLLOW THE PACKET</span>
+                <span class="scroll-indicator-arrow">â†“</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Hero Canvas Visual Card -->
+          <div class="hero-visual-container" aria-hidden="true">
+            <canvas id="hero-canvas" class="hero-visual-canvas"></canvas>
+            <div class="hero-visual-overlay">
+              <div class="hero-visual-header">
+                <span>ORBITAL_NETWORK_SIM</span>
+                <span>Î»: 1550 nm</span>
+              </div>
+              <div class="hero-visual-footer">
+                <span>PACKET_7A3F IN ORBIT</span>
+                <strong>VELOCITY: ~200,000 KM/S</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         02 â€” DATA CENTER (01 THE JOURNEY BEGINS)
+         ========================================================================== -->
+    <section id="datacenter" class="journey-section">
+      <div class="section-numeral-bg" aria-hidden="true">01</div>
+      <div class="container">
+        <div class="dc-grid">
+          <div class="dc-content">
+            <span class="eyebrow">01 / THE JOURNEY BEGINS</span>
+            <h2 class="lead-text text-gradient" style="font-size:clamp(2.2rem, 3.8vw, 3.4rem); font-family:var(--font-display); margin-bottom:1.5rem;">
+              It starts with a machine.
+            </h2>
+            <p class="lead-text">
+              When you request a webpage, your request travels thousands of miles to reach a server. The server processes the request and prepares the data that needs to come back to you.
+            </p>
+            <p>
+              In a climate-controlled data center thousands of miles away, powerful server blades slice high-resolution text, code, and images into small, discrete chunks called <strong>packets</strong>â€”each capped at around 1,500 bytes.
+            </p>
+
+            <!-- Technical packet header specs -->
+            <div class="editorial-card" style="margin-top:1.5rem; padding:1.25rem;">
+              <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-family:var(--font-mono); font-size:0.75rem;">
+                <span style="color:var(--accent-lime);">PACKET ANATOMY</span>
+                <span style="color:var(--text-muted);">MTU: 1500 BYTES</span>
+              </div>
+              <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap:8px; font-family:var(--font-mono); font-size:0.72rem;">
+                <div style="background:rgba(6,26,19,0.8); padding:8px; border-radius:4px; border:1px solid var(--border-faint);">
+                  <span style="color:var(--text-muted); display:block;">IP HEADER</span>
+                  <span style="color:var(--accent-mint);">20 Bytes (From/To)</span>
+                </div>
+                <div style="background:rgba(6,26,19,0.8); padding:8px; border-radius:4px; border:1px solid var(--border-faint);">
+                  <span style="color:var(--text-muted); display:block;">TCP HEADER</span>
+                  <span style="color:var(--accent-mint);">20 Bytes (Seq/Port)</span>
+                </div>
+                <div style="background:rgba(6,26,19,0.8); padding:8px; border-radius:4px; border:1px solid var(--border-bright);">
+                  <span style="color:var(--accent-lime); display:block;">TLS PAYLOAD</span>
+                  <span style="color:#FFF;">1460 Bytes (HTML)</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Fun Fact Card -->
+            <div class="fun-fact-card">
+              <div class="fun-fact-badge">
+                <span>âš¡ FUN FACT</span>
+              </div>
+              <p class="fun-fact-text">
+                The internet is not one giant machine. It is a vast, decentralized federation of independent networks that agree on a universal language called TCP/IP.
+              </p>
+            </div>
+          </div>
+
+          <!-- Isometric Server Room & Packet Genesis -->
+          <div class="dc-visual">
+            <div class="dc-rack-stage">
+              <div class="dc-rack-cluster">
+                <!-- Rack 1 -->
+                <div class="server-rack">
+                  <div class="rack-header">
+                    <span>RACK_01A</span>
+                    <div class="rack-led active"></div>
+                  </div>
+                  <div class="rack-blade"><div class="blade-leds"><div class="rack-led active"></div><div class="rack-led"></div></div></div>
+                  <div class="rack-blade"><div class="blade-leds"><div class="rack-led"></div><div class="rack-led active"></div></div></div>
+                  <div class="rack-blade"><div class="blade-leds"><div class="rack-led amber"></div><div class="rack-led"></div></div></div>
+                  <div class="rack-blade"><div class="blade-leds"><div class="rack-led active"></div><div class="rack-led"></div></div></div>
+                </div>
+
+                <!-- Rack 2 (Genesis Rack) -->
+                <div class="server-rack active-rack">
+                  <div class="rack-header">
+                    <span style="color:var(--accent-lime);">WEB_NODE_07</span>
+                    <div class="rack-led active"></div>
+                  </div>
+                  <div class="rack-blade"><div class="blade-leds"><div class="rack-led active"></div><div class="rack-led active"></div></div></div>
+                  <!-- Active Genesis Blade -->
+                  <div class="rack-blade genesis-blade">
+                    <span style="font-family:var(--font-mono); font-size:0.6rem; color:var(--accent-lime);">PACKET_GEN</span>
+                    <div class="blade-leds"><div class="rack-led active"></div><div class="rack-led active"></div></div>
+                  </div>
+                  <div class="rack-blade"><div class="blade-leds"><div class="rack-led"></div><div class="rack-led active"></div></div></div>
+                  <div class="rack-blade"><div class="blade-leds"><div class="rack-led active"></div><div class="rack-led amber"></div></div></div>
+                </div>
+
+                <!-- Rack 3 -->
+                <div class="server-rack">
+                  <div class="rack-header">
+                    <span>EDGE_SW_03</span>
+                    <div class="rack-led active"></div>
+                  </div>
+                  <div class="rack-blade"><div class="blade-leds"><div class="rack-led active"></div><div class="rack-led"></div></div></div>
+                  <div class="rack-blade"><div class="blade-leds"><div class="rack-led"></div><div class="rack-led active"></div></div></div>
+                  <div class="rack-blade"><div class="blade-leds"><div class="rack-led active"></div><div class="rack-led"></div></div></div>
+                  <div class="rack-blade"><div class="blade-leds"><div class="rack-led amber"></div><div class="rack-led active"></div></div></div>
+                </div>
+              </div>
+
+              <!-- Animated Genesis Card -->
+              <div class="packet-genesis-card">
+                <div class="genesis-visual">
+                  <div class="glowing-data-packet">TCP</div>
+                  <div class="genesis-info">
+                    <span class="label">STATUS: PACKET CREATED</span>
+                    <span class="val">PACKET_7A3F [SYN-ACK]</span>
+                  </div>
+                </div>
+                <div class="fiber-optical-outflow">
+                  <div class="fiber-cable-line"></div>
+                  <span>FIBER OUT</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         03 â€” UNDERSEA CABLES (02 ACROSS THE OCEAN)
+         ========================================================================== -->
+    <section id="ocean" class="journey-section ocean-section">
+      <div class="section-numeral-bg" aria-hidden="true">02</div>
+      <div class="container">
+        <div class="ocean-content-header" style="max-width:800px;">
+          <span class="eyebrow">02 / ACROSS THE OCEAN</span>
+          <h2 class="lead-text text-gradient" style="font-size:clamp(2.2rem, 3.8vw, 3.4rem); font-family:var(--font-display); margin-bottom:1.5rem;">
+            Most of the internet travels underwater.
+          </h2>
+          <p class="lead-text">
+            Long-distance internet traffic does not bounce across space satellites. Over 99% of intercontinental traffic travels through fiber-optic cables laid directly across the pitch-black ocean floor.
+          </p>
+          <p>
+            Inside these armored cables resting miles beneath the ocean surface, infrared lasers fire pulses through hair-thin silica glass strands at approximately 200,000 kilometers per second.
+          </p>
+        </div>
+
+        <!-- Interactive Vector World Map -->
+        <div class="ocean-map-wrapper">
+          <div class="map-hud-header">
+            <div class="map-status-group">
+              <span style="color:var(--accent-lime); font-weight:600;">TRANS-OCEANIC FIBER GRID</span>
+              <span class="mono-tag" id="map-telemetry-station">Ashburn Data Center, USA</span>
+            </div>
+            <div style="display:flex; gap:16px; color:var(--text-muted);">
+              <span>DEPTH: <strong id="map-telemetry-depth" style="color:var(--accent-mint);">3,840 m Undersea</strong></span>
+              <span>LIGHT SPEED: <strong id="map-telemetry-speed" style="color:var(--accent-lime);">200,000 km/s</strong></span>
+            </div>
+          </div>
+
+          <!-- Stylized Dark Emerald World Map with Coastlines & Undersea Routes -->
+          <svg id="subsea-map-svg" class="map-svg-container" viewBox="0 0 1000 500" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Submarine Cable World Map">
+            <defs>
+              <linearGradient id="cableGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#24B47E"/>
+                <stop offset="50%" stop-color="#58F0B0"/>
+                <stop offset="100%" stop-color="#B9F36A"/>
+              </linearGradient>
+              <filter id="glowFilter" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="3" result="blur" />
+                <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+              </filter>
+            </defs>
+
+            <!-- Ocean Bathymetric Contours -->
+            <path class="bathymetry-contour" d="M 50 180 Q 250 120 450 180 T 850 200" />
+            <path class="bathymetry-contour" d="M 80 320 Q 280 360 520 310 T 920 340" />
+
+            <!-- Continents (Stylized Vector Paths) -->
+            <!-- North America -->
+            <path class="landmass" d="M 80 80 L 220 70 L 270 120 L 250 220 L 190 280 L 150 240 L 130 160 L 80 140 Z" />
+            <!-- Europe -->
+            <path class="landmass" d="M 430 80 L 520 70 L 550 130 L 490 180 L 440 170 L 420 120 Z" />
+            <!-- Africa -->
+            <path class="landmass" d="M 450 200 L 540 190 L 570 270 L 520 380 L 460 360 L 430 250 Z" />
+            <!-- Asia & India -->
+            <path class="landmass" d="M 540 80 L 780 70 L 860 170 L 820 280 L 740 310 L 690 270 L 640 290 L 630 210 L 560 160 Z" />
+            <!-- India Promontory -->
+            <path class="landmass" d="M 640 210 L 680 230 L 665 310 L 630 260 Z" />
+
+            <!-- Secondary Global Undersea Cables (Background routes) -->
+            <!-- Transpacific -->
+            <path class="subsea-cable" d="M 120 180 Q 30 250 10 320 M 990 320 Q 920 310 820 280" />
+            <!-- Transatlantic North -->
+            <path class="subsea-cable" d="M 250 140 Q 350 100 450 120" />
+            <!-- Mediterranean to Asia -->
+            <path class="subsea-cable" d="M 490 170 Q 560 210 635 245" />
+
+            <!-- PRIMARY PACKET CABLE ROUTE (Ashburn -> Atlantic -> Suez -> Mumbai) -->
+            <path id="primary-cable-route" class="active-packet-cable" d="M 235 155 Q 350 170 445 145 T 530 205 Q 570 240 645 255" filter="url(#glowFilter)" />
+
+            <!-- Optical Repeaters (Amplifier Stations along the seafloor) -->
+            <circle cx="310" cy="162" r="3.5" class="cable-pulse-marker" />
+            <circle cx="390" cy="155" r="3.5" class="cable-pulse-marker" />
+            <circle cx="485" cy="175" r="3.5" class="cable-pulse-marker" />
+            <circle cx="585" cy="235" r="3.5" class="cable-pulse-marker" />
+
+            <!-- Landing Station Nodes -->
+            <!-- Ashburn Origin -->
+            <circle cx="235" cy="155" r="6" class="landing-station-node" />
+            <text x="210" y="145" class="map-node-label">ASHBURN [DATA CENTER]</text>
+
+            <!-- Bude / UK -->
+            <circle cx="445" cy="145" r="5" class="landing-station-node" />
+            <text x="440" y="132" class="map-node-label">BUDE CLS</text>
+
+            <!-- Marseille / France -->
+            <circle cx="490" cy="170" r="5" class="landing-station-node" />
+
+            <!-- Mumbai Destination -->
+            <circle cx="645" cy="255" r="7" class="landing-station-node" style="fill:var(--accent-lime); filter:url(#glowFilter);" />
+            <text x="655" y="260" class="map-node-label" style="fill:var(--accent-lime); font-weight:700;">MUMBAI LANDING STATION</text>
+
+            <!-- Dynamic Packet Tracer on Cable -->
+            <circle id="map-packet-tracer" cx="235" cy="155" r="6" fill="#FFFFFF" filter="url(#glowFilter)" />
+          </svg>
+        </div>
+
+        <!-- Ocean Action Row -->
+        <div class="ocean-action-row">
+          <div>
+            <button id="btn-open-cable-peek" class="btn btn-secondary">
+              <span style="color:var(--accent-lime);">ðŸ”</span>
+              <span>PEEK INSIDE THE CABLE</span>
+            </button>
+            <button id="btn-replay-cable" class="btn btn-secondary" style="margin-left:12px;">
+              <span>REPLAY SUBSEA TRAVERSAL</span>
+            </button>
+          </div>
+          <span class="mono-tag" style="background:rgba(3,18,13,0.8);">
+            TRANSIT DISTANCE: ~13,800 KM // OPTICAL REPEATERS: 184 UNITS
+          </span>
+        </div>
+
+        <!-- Fun Fact Card -->
+        <div class="fun-fact-card" style="margin-top:2rem;">
+          <div class="fun-fact-badge">
+            <span>âš¡ FUN FACT</span>
+          </div>
+          <p class="fun-fact-text">
+            A single modern undersea fiber cable is only about the diameter of a garden hose (around 25â€“35 mm), yet carries hundreds of terabits per second using multiple wavelengths of light on strands thinner than a human hair.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         04 â€” ISP (03 THE NETWORK OF NETWORKS)
+         ========================================================================== -->
+    <section id="isp" class="journey-section">
+      <div class="section-numeral-bg" aria-hidden="true">03</div>
+      <div class="container">
+        <span class="eyebrow">03 / THE NETWORK OF NETWORKS</span>
+        <h2 class="lead-text text-gradient" style="font-size:clamp(2.2rem, 3.8vw, 3.4rem); font-family:var(--font-display); margin-bottom:1.5rem;">
+          Now the packet enters your ISP.
+        </h2>
+        <p class="lead-text" style="max-width:820px;">
+          Your Internet Service Provider (ISP) connects your local city to global backbone transit carriers and peering exchange points.
+        </p>
+        <p style="max-width:820px;">
+          As your packet arrives at the coastal landing station, it leaves the undersea fiber and enters giant routing computers. These core routers use <strong>Border Gateway Protocol (BGP)</strong> to examine the destination IP and forward the packet across autonomous networks.
+        </p>
+
+        <!-- Interactive ISP Network Topology -->
+        <div class="isp-topology-stage">
+          <div class="topology-grid">
+            <!-- Node 1 -->
+            <div class="topology-node-card active-node" data-hop="0">
+              <div class="node-icon-wrapper">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10" stroke-width="1.5"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" stroke-width="1.5"/></svg>
+              </div>
+              <h3 class="node-title">Tier 1 Backbone</h3>
+              <span class="node-asn-badge">AS3356 / GLOBAL TRANSIT</span>
+              <p class="node-desc">Transcontinental carrier routing high-capacity DWDM traffic across optical rings.</p>
+            </div>
+
+            <!-- Node 2 -->
+            <div class="topology-node-card" data-hop="1">
+              <div class="node-icon-wrapper">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2" stroke-width="1.5"/><path d="M3 9h18M9 21V9" stroke-width="1.5"/></svg>
+              </div>
+              <h3 class="node-title">Internet Exchange</h3>
+              <span class="node-asn-badge">IXP / PEERING FABRIC</span>
+              <p class="node-desc">Neutral switching facility where major telecom networks exchange traffic freely.</p>
+            </div>
+
+            <!-- Node 3 -->
+            <div class="topology-node-card" data-hop="2">
+              <div class="node-icon-wrapper">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke-width="1.5"/></svg>
+              </div>
+              <h3 class="node-title">Regional ISP Core</h3>
+              <span class="node-asn-badge">AS55836 / METRO RING</span>
+              <p class="node-desc">Aggregates regional city traffic and routes packets toward the metropolitan gateway.</p>
+            </div>
+
+            <!-- Node 4 -->
+            <div class="topology-node-card" data-hop="3">
+              <div class="node-icon-wrapper">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 20V10M12 20V4M6 20v-6" stroke-width="1.5"/></svg>
+              </div>
+              <h3 class="node-title">Central Office OLT</h3>
+              <span class="node-asn-badge">GPON OPTICAL LINE</span>
+              <p class="node-desc">Terminates thousands of neighborhood fiber optic cables using laser modulation.</p>
+            </div>
+
+            <!-- Node 5 -->
+            <div class="topology-node-card" data-hop="4">
+              <div class="node-icon-wrapper">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke-width="1.5"/></svg>
+              </div>
+              <h3 class="node-title">Street Cabinet</h3>
+              <span class="node-asn-badge">LOCAL SPLITTER DROP</span>
+              <p class="node-desc">Splits the single fiber line into individual residential connections down your road.</p>
+            </div>
+          </div>
+
+          <!-- ISP Route Flow Telemetry Bar -->
+          <div class="isp-route-flow">
+            <div>
+              <span style="color:var(--text-muted);">ACTIVE BGP ROUTE:</span>
+              <strong id="isp-asn-display" style="color:var(--accent-lime); margin-left:8px;">AS3356 (Lumen / Level 3)</strong>
+            </div>
+            <div>
+              <span id="isp-hop-display" style="color:var(--accent-mint); font-weight:600;">HOP 1 OF 5</span>
+              <span id="isp-latency-display" style="color:var(--text-secondary); margin-left:12px;">+4.2 ms</span>
+            </div>
+            <div>
+              <span id="isp-status-display" style="color:var(--text-primary);">BGP Route Active [PREFIX 104.21.0.0/16]</span>
+            </div>
+            <button id="btn-trace-isp" class="btn btn-primary" style="padding:8px 18px; font-size:0.75rem;">
+              <span>TRACE ROUTE</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Fun Fact Card -->
+        <div class="fun-fact-card">
+          <div class="fun-fact-badge">
+            <span>âš¡ FUN FACT</span>
+          </div>
+          <p class="fun-fact-text">
+            The internet functions without any central commander. Over 70,000 independent networks cooperate using voluntary peering agreements, letting billions of packets traverse borders seamlessly.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         05 â€” ROUTER (04 THE LOCAL TRAFFIC COP)
+         ========================================================================== -->
+    <section id="router" class="journey-section">
+      <div class="section-numeral-bg" aria-hidden="true">04</div>
+      <div class="container">
+        <span class="eyebrow">04 / THE LOCAL TRAFFIC COP</span>
+        <h2 class="lead-text text-gradient" style="font-size:clamp(2.2rem, 3.8vw, 3.4rem); font-family:var(--font-display); margin-bottom:1.5rem;">
+          Your router decides where the packet goes next.
+        </h2>
+        <p class="lead-text" style="max-width:820px;">
+          A router examines incoming packet headers, translates network addresses, and forwards data straight to the specific device that requested it.
+        </p>
+
+        <!-- Router Showcase & Device Subnet Splitter -->
+        <div class="router-showcase">
+          <div class="router-visual-grid">
+            <!-- Router Hardware Graphic -->
+            <div>
+              <div class="router-chassis">
+                <div class="router-antennas">
+                  <div class="antenna-stick">
+                    <div class="antenna-signal-waves">
+                      <div class="signal-arc"></div>
+                      <div class="signal-arc"></div>
+                    </div>
+                  </div>
+                  <div class="antenna-stick">
+                    <div class="antenna-signal-waves">
+                      <div class="signal-arc"></div>
+                      <div class="signal-arc"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <div>
+                    <h3 style="font-family:var(--font-display); font-size:1.3rem;">DUAL-BAND WI-FI 6 GATEWAY</h3>
+                    <span style="font-family:var(--font-mono); font-size:0.72rem; color:var(--accent-mint);">PUBLIC IP: 198.51.100.24</span>
+                  </div>
+                  <button id="btn-traffic-burst" class="btn btn-secondary" style="padding:6px 14px; font-size:0.7rem;">
+                    <span>BURST TRAFFIC</span>
+                  </button>
+                </div>
+
+                <!-- Router Status LEDs -->
+                <div class="router-led-panel">
+                  <div class="router-led-item">
+                    <div class="led-bulb"></div>
+                    <span>PWR</span>
+                  </div>
+                  <div class="router-led-item">
+                    <div class="led-bulb"></div>
+                    <span>WAN</span>
+                  </div>
+                  <div class="router-led-item">
+                    <div class="led-bulb"></div>
+                    <span>2.4G</span>
+                  </div>
+                  <div class="router-led-item">
+                    <div class="led-bulb"></div>
+                    <span>5G</span>
+                  </div>
+                  <div class="router-led-item">
+                    <div class="led-bulb"></div>
+                    <span>LAN1</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Live NAT Translation Tooltip -->
+              <div class="editorial-card" style="margin-top:1.5rem; padding:1.25rem;">
+                <span class="eyebrow" style="margin-bottom:0.5rem; font-size:0.7rem;">NETWORK ADDRESS TRANSLATION (NAT)</span>
+                <div style="font-family:var(--font-mono); font-size:0.78rem; line-height:1.7;">
+                  <div><span style="color:var(--text-muted);">SOURCE:</span> <span id="nat-source-display" style="color:var(--text-primary);">WAN 198.51.100.24 : 49152</span></div>
+                  <div><span style="color:var(--text-muted);">DESTINATION:</span> <strong id="nat-dest-display" style="color:var(--accent-lime);">192.168.1.102 : TCP 443 (HTTPS)</strong></div>
+                  <div><span style="color:var(--text-muted);">CARRIER:</span> <span id="nat-port-display" style="color:var(--accent-mint);">Wi-Fi 6 (802.11ax 5GHz)</span></div>
+                  <div style="margin-top:6px; color:var(--accent-lime-pale);"><strong id="nat-status-display">DESTINATION MATCH â€” Forwarding primary webpage packet payload.</strong></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Subnet Devices (Interactive Splitter) -->
+            <div class="subnet-devices-card">
+              <span class="eyebrow" style="font-size:0.72rem;">CONNECTED LOCAL SUBNET (192.168.1.0/24)</span>
+
+              <!-- Device 1 (Target Laptop) -->
+              <div class="subnet-device-item target-device" data-device="laptop">
+                <div class="device-meta">
+                  <div class="device-icon-box">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="3" width="20" height="14" rx="2" stroke-width="1.5"/><path d="M8 21h8M12 17v4" stroke-width="1.5"/></svg>
+                  </div>
+                  <div class="device-info">
+                    <h4>Workstation Laptop</h4>
+                    <p>192.168.1.102 â€¢ Port 443 (HTTPS)</p>
+                  </div>
+                </div>
+                <span class="target-badge">TARGET RECIPIENT</span>
+              </div>
+
+              <!-- Device 2 (Phone) -->
+              <div class="subnet-device-item" data-device="phone">
+                <div class="device-meta">
+                  <div class="device-icon-box">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="5" y="2" width="14" height="20" rx="2" stroke-width="1.5"/><path d="M12 18h.01" stroke-width="2"/></svg>
+                  </div>
+                  <div class="device-info">
+                    <h4>Personal Smartphone</h4>
+                    <p>192.168.1.145 â€¢ Port 5060 (VoIP)</p>
+                  </div>
+                </div>
+                <span style="font-family:var(--font-mono); font-size:0.7rem; color:var(--text-muted);">ACTIVE</span>
+              </div>
+
+              <!-- Device 3 (Smart TV) -->
+              <div class="subnet-device-item" data-device="tv">
+                <div class="device-meta">
+                  <div class="device-icon-box">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="4" width="20" height="15" rx="2" stroke-width="1.5"/><path d="M17 19l2 2M7 19l-2 2" stroke-width="1.5"/></svg>
+                  </div>
+                  <div class="device-info">
+                    <h4>4K Ultra HD Smart TV</h4>
+                    <p>192.168.1.200 â€¢ Streaming 4K</p>
+                  </div>
+                </div>
+                <span style="font-family:var(--font-mono); font-size:0.7rem; color:var(--text-muted);">LAN 1</span>
+              </div>
+
+              <!-- Device 4 (Tablet) -->
+              <div class="subnet-device-item" data-device="tablet">
+                <div class="device-meta">
+                  <div class="device-icon-box">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="4" y="2" width="16" height="20" rx="2" stroke-width="1.5"/><circle cx="12" cy="18" r="1"/></svg>
+                  </div>
+                  <div class="device-info">
+                    <h4>Reading Tablet</h4>
+                    <p>192.168.1.118 â€¢ Idle</p>
+                  </div>
+                </div>
+                <span style="font-family:var(--font-mono); font-size:0.7rem; color:var(--text-muted);">STANDBY</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fun Fact Card -->
+        <div class="fun-fact-card">
+          <div class="fun-fact-badge">
+            <span>âš¡ FUN FACT</span>
+          </div>
+          <p class="fun-fact-text">
+            Your home router can be handling many different packets and connections at the exact same timeâ€”translating single public internet addresses into multiple private home devices in microseconds.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         06 â€” YOUR DEVICE (05 THE LAST METER)
+         ========================================================================== -->
+    <section id="device" class="journey-section">
+      <div class="section-numeral-bg" aria-hidden="true">05</div>
+      <div class="container">
+        <div class="device-culmination-stage">
+          <div class="device-text-content">
+            <span class="eyebrow">05 / THE LAST METER</span>
+            <h2 class="lead-text text-gradient" style="font-size:clamp(2.4rem, 4.5vw, 4.2rem); font-family:var(--font-display); margin-bottom:1.5rem;">
+              And finally... You.
+            </h2>
+            <p class="lead-text">
+              What felt like an instantaneous click was actually a physical odyssey spanning continents, oceans, and millions of transistors.
+            </p>
+
+            <!-- Packet Reassembly Stepper -->
+            <div class="packet-unpack-stepper" style="margin-top:2rem;">
+              <div class="stepper-step completed">
+                <div class="stepper-check">âœ“</div>
+                <div>
+                  <strong>01 / PACKET ARRIVES</strong>
+                  <div style="font-size:0.7rem; color:var(--text-muted);">Antenna receives electromagnetic RF waves @ 5.2 GHz</div>
+                </div>
+              </div>
+              <div class="stepper-step completed">
+                <div class="stepper-check">âœ“</div>
+                <div>
+                  <strong>02 / DATA REASSEMBLED</strong>
+                  <div style="font-size:0.7rem; color:var(--text-muted);">TCP stack checks checksum, strips headers, reorders chunks</div>
+                </div>
+              </div>
+              <div class="stepper-step completed">
+                <div class="stepper-check">âœ“</div>
+                <div>
+                  <strong>03 / CONTENT RENDERED</strong>
+                  <div style="font-size:0.7rem; color:var(--text-muted);">Browser engine parses HTML/CSSOM and paints GPU pixels</div>
+                </div>
+              </div>
+              <div class="stepper-step completed">
+                <div class="stepper-check" style="background:var(--accent-lime); color:#000;">â˜…</div>
+                <div style="color:var(--accent-lime);">
+                  <strong>04 / YOU SEE THE PAGE</strong>
+                  <div style="font-size:0.7rem; color:var(--accent-lime-pale);">Total elapsed physical time: ~104 milliseconds</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Futuristic Device Screen Mockup -->
+          <div class="device-mockup-wrapper">
+            <div class="laptop-frame">
+              <div class="laptop-screen">
+                <div class="browser-chrome">
+                  <div class="browser-dots">
+                    <div class="browser-dot" style="background:#EF4444;"></div>
+                    <div class="browser-dot" style="background:#F59E0B;"></div>
+                    <div class="browser-dot" style="background:#10B981;"></div>
+                  </div>
+                  <div class="browser-address-bar">
+                    <span style="color:var(--accent-lime);">ðŸ”’ https://</span>
+                    <span>acm.mit.edu/follow-the-packet</span>
+                  </div>
+                </div>
+
+                <div class="browser-viewport">
+                  <div style="font-family:var(--font-mono); font-size:0.72rem; color:var(--accent-mint); margin-bottom:6px;">
+                    STATUS: 200 OK â€¢ 104 MS
+                  </div>
+                  <h3 style="font-family:var(--font-display); font-size:1.4rem; color:#FFF; margin-bottom:6px;">
+                    PACKET RECEIVED.
+                  </h3>
+                  <p style="font-family:var(--font-editorial); font-style:italic; font-size:1rem; color:var(--accent-lime); margin-bottom:12px;">
+                    â€œYour click travels farther than you think.â€
+                  </p>
+                  <span class="mono-tag" style="background:rgba(88,240,176,0.15); border-color:var(--accent-lime);">
+                    1,460 BYTES REASSEMBLED
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         07 â€” LATENCY LAB (HOW FAST IS "INSTANT"?)
+         ========================================================================== -->
+    <section id="latency-lab" class="journey-section latency-lab-section">
+      <div class="container">
+        <span class="eyebrow">06 / SPEED & LATENCY BENCHMARK</span>
+        <h2 class="lead-text text-gradient" style="font-size:clamp(2.2rem, 3.8vw, 3.4rem); font-family:var(--font-display); margin-bottom:1.5rem;">
+          How fast is â€œinstantâ€?
+        </h2>
+        <p class="lead-text" style="max-width:820px;">
+          When a web page opens in what feels like the blink of an eye, packets are racing against the fundamental physics of the universe.
+        </p>
+
+        <div class="latency-showcase">
+          <div class="latency-header-row">
+            <div>
+              <h3 style="font-family:var(--font-display); font-size:1.35rem;">SIMULATED PACKET TRAVEL BENCHMARK</h3>
+              <p style="font-size:0.88rem; color:var(--text-muted); margin:0;">Select a remote server location to simulate network transit speed.</p>
+            </div>
+            <div class="simulation-disclaimer-badge">
+              SIMULATION / NOT A LIVE NETWORK TEST
+            </div>
+          </div>
+
+          <!-- Presets -->
+          <div class="latency-presets-grid">
+            <button class="latency-preset-btn" data-preset="edge">
+              <span class="preset-title">Local Edge / CDN</span>
+              <span class="preset-dist">~110 km â€¢ Same Metro</span>
+            </button>
+            <button class="latency-preset-btn" data-preset="regional">
+              <span class="preset-title">Regional Server</span>
+              <span class="preset-dist">~1,450 km â€¢ Domestic</span>
+            </button>
+            <button class="latency-preset-btn active" data-preset="transoceanic">
+              <span class="preset-title">Transoceanic Subsea</span>
+              <span class="preset-dist">~13,800 km â€¢ US âž” India</span>
+            </button>
+            <button class="latency-preset-btn" data-preset="leo">
+              <span class="preset-title">LEO Constellation</span>
+              <span class="preset-dist">~1,800 km â€¢ Starlink LEO</span>
+            </button>
+            <button class="latency-preset-btn" data-preset="geo">
+              <span class="preset-title">GEO Satellite</span>
+              <span class="preset-dist">~71,570 km â€¢ Geostationary</span>
+            </button>
+          </div>
+
+          <!-- Big Display & Visual Race Track -->
+          <div class="latency-display-board">
+            <div class="latency-stat-card">
+              <span class="latency-unit">ROUND-TRIP TIME (RTT)</span>
+              <div class="latency-number"><span id="lab-latency-num">168</span></div>
+              <span class="latency-unit">MILLISECONDS</span>
+            </div>
+
+            <!-- Race Bars -->
+            <div class="race-tracks-container">
+              <!-- Fiber Light Speed -->
+              <div class="race-track-row">
+                <div class="race-track-header">
+                  <span class="name">Speed of Light in Silica Glass (~200,000 km/s)</span>
+                  <span class="time" id="race-time-fiber">Direct Optical Pulse</span>
+                </div>
+                <div class="race-bar-bg">
+                  <div id="race-bar-fiber" class="race-bar-fill" style="width: 52%;"></div>
+                </div>
+              </div>
+
+              <!-- Electronics & Router Processing -->
+              <div class="race-track-row">
+                <div class="race-track-header">
+                  <span class="name">Electronic Router Hops & BGP Inspection</span>
+                  <span class="time" id="race-time-router">Routing Delays Compound</span>
+                </div>
+                <div class="race-bar-bg">
+                  <div id="race-bar-router" class="race-bar-fill lime-bar" style="width: 58%;"></div>
+                </div>
+              </div>
+
+              <!-- Human Eye Blink Comparison -->
+              <div class="race-track-row">
+                <div class="race-track-header">
+                  <span class="name">Human Eye Blink Reference (300 â€“ 400 ms)</span>
+                  <span class="time" style="color:var(--accent-amber);">Average Human Perception</span>
+                </div>
+                <div class="race-bar-bg">
+                  <div id="race-bar-blink" class="race-bar-fill amber-bar" style="width: 65%;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Metrics Grid -->
+          <div class="latency-metrics-grid">
+            <div class="metric-box">
+              <div class="label">PHYSICAL DISTANCE</div>
+              <div class="value" id="lab-metric-distance">13,800 km</div>
+            </div>
+            <div class="metric-box">
+              <div class="label">NETWORK HOPS</div>
+              <div class="value" id="lab-metric-hops">14 Hops</div>
+            </div>
+            <div class="metric-box">
+              <div class="label">SPEED VS BLINK</div>
+              <div class="value" id="lab-metric-blink" style="color:var(--accent-lime);">2Ã— faster than a blink</div>
+            </div>
+            <div class="metric-box">
+              <div class="label">PHYSICAL MEDIUM</div>
+              <div class="value" id="lab-metric-medium" style="font-size:0.85rem;">Submarine Fiber Cable</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         08 â€” AI EXPLORER (ASK THE PACKET)
+         ========================================================================== -->
+    <section id="ai-explorer" class="journey-section ai-explorer-section">
+      <div class="container">
+        <span class="eyebrow">07 / INTERACTIVE KNOWLEDGE HUB</span>
+        <h2 class="lead-text text-gradient" style="font-size:clamp(2.2rem, 3.8vw, 3.4rem); font-family:var(--font-display); margin-bottom:1.5rem;">
+          Curious where your data goes?
+        </h2>
+        <p class="lead-text" style="max-width:820px;">
+          Ask the packet directly. Explore the engineering trade-offs, undersea physics, and networking wonders that keep our planet connected.
+        </p>
+
+        <div class="ai-explorer-card">
+          <!-- Top Bar -->
+          <div class="explorer-top-bar">
+            <div class="explorer-status-chip">
+              <span class="status-dot"></span>
+              <strong>AI EXPLORER // INTERACTIVE PROTOTYPE</strong>
+            </div>
+
+            <!-- Simple vs Technical Mode Switch -->
+            <div class="depth-mode-switch">
+              <button id="btn-mode-simple" class="depth-toggle-btn active">Intuitive</button>
+              <button id="btn-mode-tech" class="depth-toggle-btn">Deep Technical</button>
+            </div>
+          </div>
+
+          <!-- Explorer Body -->
+          <div class="explorer-body">
+            <!-- Sidebar Questions -->
+            <div class="questions-sidebar">
+              <span class="questions-label">CHOOSE A QUESTION</span>
+              <input type="text" id="ai-search-input" placeholder="Search questions..." style="background:rgba(3,18,13,0.8); border:1px solid var(--border-subtle); border-radius:4px; padding:8px 12px; font-family:var(--font-mono); font-size:0.75rem; color:#FFF; margin-bottom:8px;">
+
+              <button class="question-chip active" data-q="q1">
+                <span>Why undersea cables instead of satellites?</span>
+                <span class="question-arrow">â†’</span>
+              </button>
+              <button class="question-chip" data-q="q2">
+                <span>What happens if an undersea cable breaks?</span>
+                <span class="question-arrow">â†’</span>
+              </button>
+              <button class="question-chip" data-q="q3">
+                <span>Why does distance affect latency?</span>
+                <span class="question-arrow">â†’</span>
+              </button>
+              <button class="question-chip" data-q="q4">
+                <span>How do packets find their way without a master?</span>
+                <span class="question-arrow">â†’</span>
+              </button>
+              <button class="question-chip" data-q="q5">
+                <span>Can anyone read a packet along the way?</span>
+                <span class="question-arrow">â†’</span>
+              </button>
+              <button class="question-chip" data-q="q6">
+                <span>Why does video stream while gaming lags?</span>
+                <span class="question-arrow">â†’</span>
+              </button>
+            </div>
+
+            <!-- Terminal Answer Card -->
+            <div class="answer-terminal-card">
+              <div>
+                <h3 id="ai-query-heading" class="active-query-heading">
+                  Why does the internet need undersea cables instead of satellites?
+                </h3>
+                <p id="ai-answer-text" class="answer-narrative-text">
+                  Imagine trying to move an ocean of water through garden hoses in the sky versus massive underground aqueducts. Submarine fiber-optic cables use lasers inside solid glass strands to carry over 99% of global internet traffic.
+                </p>
+                <div id="ai-diagram-text" class="answer-diagram-schematic">
+                  Undersea Cable: Direct Point A âž” Point B (Pure Light @ 200,000 km/s)&#10;Satellite: Ground âž” 36,000 km into Space âž” Ground (~600ms latency)
+                </div>
+              </div>
+              <div id="ai-takeaway-text" class="answer-key-takeaway">
+                â€œCables provide nearly infinite bandwidth, extreme reliability, and lightspeed latency that wireless space networks cannot physically match.â€
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         09 â€” FINAL TAKEAWAY (ONE CLICK. AN ENTIRE ECOSYSTEM.)
+         ========================================================================== -->
+    <section id="takeaway" class="journey-section takeaway-section">
+      <div class="container">
+        <span class="eyebrow">08 / THE COMPLETE ECOSYSTEM</span>
+        <h2 class="takeaway-heading text-gradient">
+          ONE CLICK.<br>AN ENTIRE ECOSYSTEM.
+        </h2>
+        <p class="takeaway-lead">
+          Next time you open a webpage, remember: the internet didn't simply appear on your screen.<br>
+          <strong style="color:var(--accent-lime);">It travelled.</strong>
+        </p>
+
+        <!-- Full Route Recap Diagram -->
+        <div class="ecosystem-summary-flow">
+          <div class="eco-stage-node">
+            <span class="stage-num">01 ORIGIN</span>
+            <strong>SERVER</strong>
+          </div>
+          <span class="eco-arrow">â†’</span>
+          <div class="eco-stage-node">
+            <span class="stage-num">02 OCEANS</span>
+            <strong>FIBER CABLE</strong>
+          </div>
+          <span class="eco-arrow">â†’</span>
+          <div class="eco-stage-node">
+            <span class="stage-num">03 BACKBONE</span>
+            <strong>GLOBAL NET</strong>
+          </div>
+          <span class="eco-arrow">â†’</span>
+          <div class="eco-stage-node">
+            <span class="stage-num">04 ACCESS</span>
+            <strong>LOCAL ISP</strong>
+          </div>
+          <span class="eco-arrow">â†’</span>
+          <div class="eco-stage-node">
+            <span class="stage-num">05 GATEWAY</span>
+            <strong>ROUTER</strong>
+          </div>
+          <span class="eco-arrow">â†’</span>
+          <div class="eco-stage-node" style="border-color:var(--accent-lime);">
+            <span class="stage-num" style="color:var(--accent-lime);">06 DESTINATION</span>
+            <strong style="color:var(--accent-lime);">DEVICE</strong>
+          </div>
+        </div>
+
+        <div class="takeaway-actions">
+          <button class="btn btn-primary btn-replay-journey">
+            <span>REPLAY THE JOURNEY</span>
+            <span style="color:#02140D;">â†º</span>
+          </button>
+          <a href="#hero" class="btn btn-secondary">
+            <span>RETURN TO TOP</span>
+            <span style="color:var(--accent-lime);">â†‘</span>
+          </a>
+        </div>
+
+        <!-- Academic Challenge Attribution Footer -->
+        <footer class="challenge-credit-footer" role="contentinfo">
+          <div>
+            <strong>MITS ACM Student Chapter</strong> â€¢ Selection Challenge 2026
+          </div>
+          <div>
+            Topic: <strong>ACM/PS/19: How Does the Internet Reach You?</strong>
+          </div>
+          <div>
+            Concept & Design: <strong>FOLLOW THE PACKET</strong>
+          </div>
+        </footer>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==========================================================================
+       PEEK INSIDE THE CABLE â€” INTERACTIVE MODAL
+       ========================================================================== -->
+  <div id="modal-cable-peek" class="modal-backdrop" role="dialog" aria-labelledby="cable-modal-title" aria-modal="true">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="cable-modal-title" style="font-family:var(--font-display); font-size:1.25rem; color:#FFF;">
+          ANATOMY OF A SUBSEA OPTICAL CABLE
+        </h3>
+        <button id="modal-close-cable" class="modal-close-btn" aria-label="Close dialog">Ã—</button>
+      </div>
+      <div class="modal-body">
+        <div class="cable-exploder-grid">
+          <!-- Concentric SVG Cross-Section -->
+          <div style="display:flex; justify-content:center; align-items:center; background:#020E08; border-radius:12px; padding:2rem; border:1px solid var(--border-subtle);">
+            <svg width="240" height="240" viewBox="0 0 240 240" role="img" aria-label="Cable Cross Section">
+              <!-- Layer 1: Polyethylene -->
+              <circle class="svg-cable-ring" data-layer="layer1" cx="120" cy="120" r="105" fill="#042016" stroke="rgba(54, 217, 154, 0.4)" stroke-width="2"/>
+              <!-- Layer 2: Mylar -->
+              <circle class="svg-cable-ring" data-layer="layer2" cx="120" cy="120" r="85" fill="#073022" stroke="rgba(54, 217, 154, 0.4)" stroke-width="2"/>
+              <!-- Layer 3: Steel -->
+              <circle class="svg-cable-ring" data-layer="layer3" cx="120" cy="120" r="65" fill="#0A3E2D" stroke="rgba(54, 217, 154, 0.4)" stroke-width="2"/>
+              <!-- Layer 4: Copper -->
+              <circle class="svg-cable-ring" data-layer="layer4" cx="120" cy="120" r="45" fill="#0E4E39" stroke="rgba(54, 217, 154, 0.4)" stroke-width="2"/>
+              <!-- Layer 5: Gel -->
+              <circle class="svg-cable-ring" data-layer="layer5" cx="120" cy="120" r="28" fill="#146046" stroke="rgba(54, 217, 154, 0.4)" stroke-width="2"/>
+              <!-- Layer 6: Glass Core -->
+              <circle class="svg-cable-ring" data-layer="layer6" cx="120" cy="120" r="12" fill="#B9F36A" stroke="#FFFFFF" stroke-width="3"/>
+            </svg>
+          </div>
+
+          <!-- Layer List & Active Specs -->
+          <div>
+            <div class="cable-layers-stack" style="margin-bottom:1.5rem;">
+              <div class="cable-layer-row" data-layer="layer1">
+                <span><span class="layer-swatch" style="background:#042016; border:1px solid #58F0B0;"></span> 01 Outer Polyethylene Jacket</span>
+                <span>25mm</span>
+              </div>
+              <div class="cable-layer-row" data-layer="layer2">
+                <span><span class="layer-swatch" style="background:#073022; border:1px solid #58F0B0;"></span> 02 Mylar Barrier Tape</span>
+                <span>Seal</span>
+              </div>
+              <div class="cable-layer-row" data-layer="layer3">
+                <span><span class="layer-swatch" style="background:#0A3E2D; border:1px solid #58F0B0;"></span> 03 Stranded Steel Members</span>
+                <span>220 kN</span>
+              </div>
+              <div class="cable-layer-row" data-layer="layer4">
+                <span><span class="layer-swatch" style="background:#0E4E39; border:1px solid #58F0B0;"></span> 04 Copper Conductor Tube</span>
+                <span>10 kV DC</span>
+              </div>
+              <div class="cable-layer-row" data-layer="layer5">
+                <span><span class="layer-swatch" style="background:#146046; border:1px solid #58F0B0;"></span> 05 Thixotropic Water Gel</span>
+                <span>Barrier</span>
+              </div>
+              <div class="cable-layer-row active" data-layer="layer6">
+                <span><span class="layer-swatch" style="background:#B9F36A; border:1px solid #FFF;"></span> 06 Silica Glass Fibers</span>
+                <span>9 Î¼m Core</span>
+              </div>
+            </div>
+
+            <!-- Active Details -->
+            <div class="editorial-card" style="padding:1.25rem;">
+              <h4 id="cable-layer-title" style="font-family:var(--font-display); font-size:1.1rem; color:var(--accent-lime); margin-bottom:6px;">
+                06 / Ultra-Pure Silica Optical Fibers
+              </h4>
+              <p id="cable-layer-desc" style="font-size:0.88rem; color:var(--text-secondary); margin-bottom:10px;">
+                Hair-thin glass fibers (core diameter ~9 micrometers) where digital data actually lives. Infrared laser photons travel down the silica core through Total Internal Reflection.
+              </p>
+              <div style="font-family:var(--font-mono); font-size:0.72rem; color:var(--accent-mint);">
+                <div>PHYSICS: <span id="cable-layer-physics" style="color:#FFF;">Laser pulses at 1550nm wavelength; speeds ~204,000 km/s (~68% c).</span></div>
+                <div>SCALE: <span id="cable-layer-thickness" style="color:#FFF;">9 Î¼m Core / 125 Î¼m Cladding</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script>
+/**
+ * FOLLOW THE PACKET â€” WEB AUDIO API SYNTHESIZER
+ * Procedural sci-fi sound effects with zero external audio files.
+ * Clean, lightweight, and toggleable.
+ */
+
+class SoundSystem {
+  constructor() {
+    this.ctx = null;
+    this.isMuted = true; // Default muted for pleasant UX
+    this.ambientOsc = null;
+    this.ambientGain = null;
+  }
+
+  init() {
+    if (this.ctx) return;
+    try {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      this.ctx = new AudioContext();
+    } catch (e) {
+      console.warn('Web Audio API not supported in this browser.');
+    }
+  }
+
+  toggleMute() {
+    this.init();
+    if (this.ctx && this.ctx.state === 'suspended') {
+      this.ctx.resume();
+    }
+    this.isMuted = !this.isMuted;
+    if (!this.isMuted) {
+      this.playChirp(880, 0.08, 'sine');
+      this.startAmbientDrone();
+    } else {
+      this.stopAmbientDrone();
+    }
+    return this.isMuted;
+  }
+
+  startAmbientDrone() {
+    if (!this.ctx || this.isMuted || this.ambientOsc) return;
+    try {
+      this.ambientOsc = this.ctx.createOscillator();
+      this.ambientGain = this.ctx.createGain();
+
+      this.ambientOsc.type = 'sine';
+      this.ambientOsc.frequency.setValueAtTime(55, this.ctx.currentTime); // Low 55Hz A drone
+
+      this.ambientGain.gain.setValueAtTime(0.001, this.ctx.currentTime);
+      this.ambientGain.gain.exponentialRampToValueAtTime(0.015, this.ctx.currentTime + 3);
+
+      this.ambientOsc.connect(this.ambientGain);
+      this.ambientGain.connect(this.ctx.destination);
+      this.ambientOsc.start();
+    } catch (e) {
+      // Audio autoplay policy safeguard
+    }
+  }
+
+  stopAmbientDrone() {
+    if (this.ambientGain && this.ctx) {
+      try {
+        this.ambientGain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 0.5);
+        setTimeout(() => {
+          if (this.ambientOsc) {
+            this.ambientOsc.stop();
+            this.ambientOsc.disconnect();
+            this.ambientOsc = null;
+          }
+        }, 600);
+      } catch (e) {}
+    }
+  }
+
+  playPacketHop() {
+    if (this.isMuted || !this.ctx) return;
+    try {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      
+      const now = this.ctx.currentTime;
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(520, now);
+      osc.frequency.exponentialRampToValueAtTime(1040, now + 0.09);
+
+      gain.gain.setValueAtTime(0.06, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.12);
+
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+
+      osc.start(now);
+      osc.stop(now + 0.12);
+    } catch (e) {}
+  }
+
+  playLightPulse() {
+    if (this.isMuted || !this.ctx) return;
+    try {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      
+      const now = this.ctx.currentTime;
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(800, now);
+      osc.frequency.exponentialRampToValueAtTime(1600, now + 0.15);
+
+      gain.gain.setValueAtTime(0.05, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+
+      osc.start(now);
+      osc.stop(now + 0.2);
+    } catch (e) {}
+  }
+
+  playChirp(freq = 660, duration = 0.08, type = 'sine') {
+    if (this.isMuted || !this.ctx) return;
+    try {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      const now = this.ctx.currentTime;
+
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, now);
+      gain.gain.setValueAtTime(0.05, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(now);
+      osc.stop(now + duration);
+    } catch (e) {}
+  }
+}
+
+window.soundSystem = new SoundSystem();
+
+/**
+ * FOLLOW THE PACKET â€” GLOBAL PACKET TRAIL & HERO CANVASES
+ * Smooth, 60fps GPU-optimized particle rendering and path simulation.
+ */
+
+class PacketCanvasManager {
+  constructor() {
+    this.bgCanvas = document.getElementById('packet-canvas');
+    this.heroCanvas = document.getElementById('hero-canvas');
+    this.bgCtx = this.bgCanvas ? this.bgCanvas.getContext('2d') : null;
+    this.heroCtx = this.heroCanvas ? this.heroCanvas.getContext('2d') : null;
+    
+    this.particles = [];
+    this.heroNodes = [];
+    this.scrollProgress = 0;
+    this.lastScroll = 0;
+    this.packetX = 0;
+    this.packetY = 0;
+    this.trail = [];
+    this.maxTrail = 24;
+
+    this.init();
+  }
+
+  init() {
+    this.handleResize();
+    window.addEventListener('resize', () => this.handleResize());
+    window.addEventListener('scroll', () => this.handleScroll(), { passive: true });
+
+    // Initialize floating ambient nodes
+    const nodeCount = window.innerWidth < 768 ? 30 : 65;
+    for (let i = 0; i < nodeCount; i++) {
+      this.particles.push({
+        x: Math.random() * (this.bgCanvas ? this.bgCanvas.width : 1000),
+        y: Math.random() * (this.bgCanvas ? this.bgCanvas.height : 1000),
+        vx: (Math.random() - 0.5) * 0.35,
+        vy: (Math.random() - 0.5) * 0.35,
+        radius: Math.random() * 1.8 + 0.6,
+        alpha: Math.random() * 0.45 + 0.15,
+        color: Math.random() > 0.4 ? '#58F0B0' : '#B9F36A'
+      });
+    }
+
+    // Initialize hero canvas nodes
+    if (this.heroCanvas) {
+      for (let i = 0; i < 28; i++) {
+        const angle = (i / 28) * Math.PI * 2;
+        this.heroNodes.push({
+          angle: angle,
+          distance: 90 + Math.sin(i * 2) * 45,
+          speed: 0.008 + (i % 3) * 0.003
+        });
+      }
+    }
+
+    this.animate();
+  }
+
+  handleResize() {
+    if (this.bgCanvas) {
+      this.bgCanvas.width = window.innerWidth;
+      this.bgCanvas.height = window.innerHeight;
+    }
+    if (this.heroCanvas) {
+      const rect = this.heroCanvas.getBoundingClientRect();
+      this.heroCanvas.width = rect.width * window.devicePixelRatio || 500;
+      this.heroCanvas.height = rect.height * window.devicePixelRatio || 500;
+    }
+  }
+
+  handleScroll() {
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    this.scrollProgress = docHeight > 0 ? window.scrollY / docHeight : 0;
+  }
+
+  animate() {
+    requestAnimationFrame(() => this.animate());
+
+    this.renderBackgroundCanvas();
+    this.renderHeroCanvas();
+  }
+
+  renderBackgroundCanvas() {
+    if (!this.bgCtx || !this.bgCanvas) return;
+    const ctx = this.bgCtx;
+    const width = this.bgCanvas.width;
+    const height = this.bgCanvas.height;
+
+    ctx.clearRect(0, 0, width, height);
+
+    // Update and draw floating ambient nodes
+    for (let p of this.particles) {
+      p.x += p.vx;
+      p.y += p.vy;
+
+      if (p.x < 0) p.x = width;
+      if (p.x > width) p.x = 0;
+      if (p.y < 0) p.y = height;
+      if (p.y > height) p.y = 0;
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+      ctx.fillStyle = p.color;
+      ctx.globalAlpha = p.alpha;
+      ctx.fill();
+    }
+
+    // Calculate dynamic trajectory of the protagonist packet
+    // The packet gently dances across the screen following scroll
+    const targetX = width * 0.5 + Math.sin(Date.now() * 0.0015 + this.scrollProgress * 10) * (width * 0.35);
+    const targetY = height * (0.15 + (this.scrollProgress % 0.8));
+
+    this.packetX += (targetX - this.packetX) * 0.1;
+    this.packetY += (targetY - this.packetY) * 0.1;
+
+    this.trail.unshift({ x: this.packetX, y: this.packetY });
+    if (this.trail.length > this.maxTrail) this.trail.pop();
+
+    // Draw glowing packet trail
+    for (let i = 0; i < this.trail.length; i++) {
+      const pt = this.trail[i];
+      const ratio = 1 - (i / this.trail.length);
+      ctx.beginPath();
+      ctx.arc(pt.x, pt.y, 4 * ratio, 0, Math.PI * 2);
+      ctx.fillStyle = i === 0 ? '#FFFFFF' : '#36D99A';
+      ctx.globalAlpha = ratio * 0.6;
+      ctx.fill();
+    }
+
+    // Draw main glowing packet head
+    if (this.trail.length > 0) {
+      const head = this.trail[0];
+      ctx.save();
+      ctx.shadowColor = '#58F0B0';
+      ctx.shadowBlur = 18;
+      ctx.beginPath();
+      ctx.arc(head.x, head.y, 5, 0, Math.PI * 2);
+      ctx.fillStyle = '#FFFFFF';
+      ctx.globalAlpha = 0.95;
+      ctx.fill();
+
+      // Outer ring
+      ctx.beginPath();
+      ctx.arc(head.x, head.y, 11, 0, Math.PI * 2);
+      ctx.strokeStyle = '#B9F36A';
+      ctx.lineWidth = 1.5;
+      ctx.globalAlpha = 0.7;
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    ctx.globalAlpha = 1.0;
+  }
+
+  renderHeroCanvas() {
+    if (!this.heroCtx || !this.heroCanvas) return;
+    const ctx = this.heroCtx;
+    const w = this.heroCanvas.width;
+    const h = this.heroCanvas.height;
+    const cx = w / 2;
+    const cy = h / 2;
+
+    ctx.clearRect(0, 0, w, h);
+
+    const time = Date.now() * 0.001;
+
+    // Draw orbital fiber rings
+    ctx.save();
+    ctx.strokeStyle = 'rgba(54, 217, 154, 0.18)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([6, 8]);
+    ctx.beginPath();
+    ctx.ellipse(cx, cy, w * 0.35, h * 0.22, Math.PI / 6, 0, Math.PI * 2);
+    ctx.stroke();
+
+    ctx.strokeStyle = 'rgba(185, 243, 106, 0.15)';
+    ctx.beginPath();
+    ctx.ellipse(cx, cy, w * 0.25, h * 0.35, -Math.PI / 4, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Draw constellation lines connecting orbiting data nodes
+    ctx.strokeStyle = 'rgba(36, 180, 126, 0.22)';
+    ctx.beginPath();
+    for (let i = 0; i < this.heroNodes.length; i++) {
+      const node = this.heroNodes[i];
+      node.angle += node.speed;
+      const x = cx + Math.cos(node.angle + time * 0.2) * (node.distance * (w / 500));
+      const y = cy + Math.sin(node.angle * 1.5) * (node.distance * 0.65 * (h / 500));
+
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+
+      // Node dot
+      ctx.fillStyle = i % 2 === 0 ? '#58F0B0' : '#B9F36A';
+      ctx.fillRect(x - 2, y - 2, 4, 4);
+    }
+    ctx.stroke();
+
+    // Draw central packet light burst
+    const packetOrbitAngle = time * 2;
+    const px = cx + Math.cos(packetOrbitAngle) * (w * 0.32);
+    const py = cy + Math.sin(packetOrbitAngle) * (h * 0.2);
+
+    // Glowing core
+    const radGrad = ctx.createRadialGradient(px, py, 2, px, py, 40);
+    radGrad.addColorStop(0, '#FFFFFF');
+    radGrad.addColorStop(0.2, '#58F0B0');
+    radGrad.addColorStop(0.6, 'rgba(36, 180, 126, 0.4)');
+    radGrad.addColorStop(1, 'transparent');
+
+    ctx.fillStyle = radGrad;
+    ctx.beginPath();
+    ctx.arc(px, py, 40, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Central packet dot
+    ctx.fillStyle = '#FFFFFF';
+    ctx.beginPath();
+    ctx.arc(px, py, 4, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.restore();
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  window.packetCanvasManager = new PacketCanvasManager();
+});
+
+/**
+ * FOLLOW THE PACKET â€” INTERACTIVE SUBMARINE CABLE WORLD MAP
+ * Stylized vector continents, glowing fiber routes, repeater stations, and packet traversal.
+ */
+
+class WorldMapManager {
+  constructor() {
+    this.svg = document.getElementById('subsea-map-svg');
+    this.packetMarker = document.getElementById('map-packet-tracer');
+    this.cablePath = document.getElementById('primary-cable-route');
+    this.telemetryStation = document.getElementById('map-telemetry-station');
+    this.telemetryCoords = document.getElementById('map-telemetry-coords');
+    this.telemetrySpeed = document.getElementById('map-telemetry-speed');
+    this.telemetryDepth = document.getElementById('map-telemetry-depth');
+
+    this.progress = 0;
+    this.isPlaying = false;
+    this.pathLength = 0;
+    this.landingStations = [
+      { id: 'dc-ashburn', name: 'Ashburn Data Center, USA', coords: '39.0438Â° N, 77.4874Â° W', depth: 'Land (Server Blade)', speed: '1 Gbps Uplink' },
+      { id: 'cls-halifax', name: 'Halifax Cable Landing Station', coords: '44.6488Â° N, 63.5752Â° W', depth: '0 m (Shoreline)', speed: '100 Gbps DWDM' },
+      { id: 'subsea-atlantic', name: 'Mid-Atlantic Abyssal Plain', coords: '32.1200Â° N, 42.5000Â° W', depth: '3,840 m Undersea', speed: '200,000 km/s (Light)' },
+      { id: 'cls-bude', name: 'Bude Cable Landing, UK', coords: '50.8266Â° N, 4.5437Â° W', depth: '0 m (Shoreline)', speed: 'Optical Repeater 52V' },
+      { id: 'cls-marseille', name: 'Marseille Subsea Gateway, France', coords: '43.2965Â° N, 5.3698Â° E', depth: 'Land Transition', speed: 'Terabit Switch' },
+      { id: 'subsea-redsea', name: 'Bab-el-Mandeb Trench', coords: '12.5833Â° N, 43.3333Â° E', depth: '1,420 m Undersea', speed: 'Submarine Armored' },
+      { id: 'cls-mumbai', name: 'Mumbai Landing Station, India', coords: '18.9220Â° N, 72.8347Â° E', depth: '0 m (Shore Terminal)', speed: 'Tier 1 IXP Gateway' }
+    ];
+
+    this.init();
+  }
+
+  init() {
+    if (!this.svg || !this.cablePath) return;
+
+    this.pathLength = this.cablePath.getTotalLength();
+    this.setupInteractions();
+    this.animatePacketAlongCable();
+  }
+
+  setupInteractions() {
+    // Landing station nodes click/hover
+    const stationNodes = this.svg.querySelectorAll('.landing-station-node');
+    stationNodes.forEach((node, index) => {
+      node.addEventListener('mouseenter', () => {
+        const station = this.landingStations[index % this.landingStations.length];
+        this.updateTelemetry(station);
+        if (window.soundSystem) window.soundSystem.playChirp(740, 0.05);
+      });
+    });
+
+    // Replay Subsea Route Button
+    const replayBtn = document.getElementById('btn-replay-cable');
+    if (replayBtn) {
+      replayBtn.addEventListener('click', () => {
+        this.progress = 0;
+        this.isPlaying = true;
+        if (window.soundSystem) window.soundSystem.playLightPulse();
+      });
+    }
+  }
+
+  updateTelemetry(station) {
+    if (this.telemetryStation) this.telemetryStation.textContent = station.name;
+    if (this.telemetryCoords) this.telemetryCoords.textContent = station.coords;
+    if (this.telemetryDepth) this.telemetryDepth.textContent = station.depth;
+    if (this.telemetrySpeed) this.telemetrySpeed.textContent = station.speed;
+  }
+
+  animatePacketAlongCable() {
+    if (!this.cablePath || !this.packetMarker) return;
+
+    const animate = () => {
+      // Loop smoothly along the subsea fiber route
+      this.progress += 0.0022;
+      if (this.progress > 1) {
+        this.progress = 0;
+      }
+
+      const distance = this.progress * this.pathLength;
+      const point = this.cablePath.getPointAtLength(distance);
+
+      this.packetMarker.setAttribute('cx', point.x);
+      this.packetMarker.setAttribute('cy', point.y);
+
+      // Auto-update telemetry based on approximate route position
+      const stationIndex = Math.min(
+        this.landingStations.length - 1,
+        Math.floor(this.progress * this.landingStations.length)
+      );
+      this.updateTelemetry(this.landingStations[stationIndex]);
+
+      requestAnimationFrame(animate);
+    };
+
+    requestAnimationFrame(animate);
+  }
+
+  triggerScrollSync(ratio) {
+    if (!this.cablePath || !this.packetMarker) return;
+    const distance = Math.min(1, Math.max(0, ratio)) * this.pathLength;
+    const point = this.cablePath.getPointAtLength(distance);
+    this.packetMarker.setAttribute('cx', point.x);
+    this.packetMarker.setAttribute('cy', point.y);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  window.worldMapManager = new WorldMapManager();
+});
+
+/**
+ * FOLLOW THE PACKET â€” CABLE CROSS-SECTION EXPLODER
+ * Interactive microscopic inspection of a modern submarine fiber optic cable.
+ */
+
+class CablePeekManager {
+  constructor() {
+    this.openBtn = document.getElementById('btn-open-cable-peek');
+    this.closeBtn = document.getElementById('modal-close-cable');
+    this.modal = document.getElementById('modal-cable-peek');
+    this.layerRows = document.querySelectorAll('.cable-layer-row');
+    this.layerTitle = document.getElementById('cable-layer-title');
+    this.layerDesc = document.getElementById('cable-layer-desc');
+    this.layerPhysics = document.getElementById('cable-layer-physics');
+    this.layerThickness = document.getElementById('cable-layer-thickness');
+    this.svgLayers = document.querySelectorAll('.svg-cable-ring');
+
+    this.layersData = {
+      layer1: {
+        name: '01 / Polyethylene Outer Jacket',
+        desc: 'Tough, resilient high-density polyethylene (HDPE) shielding. It shields the internal components from corrosive saltwater, abrasive seabed gravel, and marine organisms.',
+        physics: 'Impervious to saltwater degradation for 25+ design life years.',
+        thickness: '25 â€“ 35 mm Outer Diameter'
+      },
+      layer2: {
+        name: '02 / Mylar Barrier Tape',
+        desc: 'Helically wrapped aluminized Mylar tape providing an airtight radial seal that blocks hydrogen ions from diffusing into the optical glass.',
+        physics: 'Free hydrogen can bond with silica (Si-OH) causing light attenuation.',
+        thickness: '0.15 mm thickness'
+      },
+      layer3: {
+        name: '03 / Stranded Steel Strength Members',
+        desc: 'High-tensile braided steel wires arranged in a contra-helical spiral. Provides the immense mechanical strength needed during ocean deployment and protects against ship anchors and commercial fishing trawlers.',
+        physics: 'Withstands crushing hydrostatic pressures exceeding 600 atmospheres at 6,000m depth.',
+        thickness: 'Tensile Strength > 220 kN'
+      },
+      layer4: {
+        name: '04 / Copper Conductor Tube',
+        desc: 'A seam-welded copper tube that acts as an electrical power conduit. Optical repeaters (amplifiers) placed every 60-80 km along the seafloor need electricity to function; this copper tube feeds them up to 10,000 Volts DC from shore stations.',
+        physics: 'Transmits ~1.0 Amp constant current across thousands of nautical miles.',
+        thickness: 'Resistance < 1.0 Î©/km'
+      },
+      layer5: {
+        name: '05 / Thixotropic Hydrophobic Gel',
+        desc: 'A synthetic water-blocking petroleum jelly filling all internal interstitial cavities. If a breach occurs due to an anchor drag, this non-hardening gel stops water from migrating longitudinally along the cable.',
+        physics: 'Viscous shear-thinning compound that cures water leaks instantly.',
+        thickness: 'Fills 100% void space'
+      },
+      layer6: {
+        name: '06 / Ultra-Pure Silica Optical Fibers',
+        desc: 'Hair-thin glass fibers (core diameter ~9 micrometers) where digital data actually lives. Infrared laser photons travel down the silica core through Total Internal Reflection, bouncing at extreme speed with minimal light loss.',
+        physics: 'Laser pulses at 1550nm wavelength; speeds ~204,000 km/s (approx 68% of speed of light in vacuum c).',
+        thickness: '9 Î¼m Core / 125 Î¼m Cladding'
+      }
+    };
+
+    this.init();
+  }
+
+  init() {
+    if (this.openBtn) {
+      this.openBtn.addEventListener('click', () => this.openModal());
+    }
+    if (this.closeBtn) {
+      this.closeBtn.addEventListener('click', () => this.closeModal());
+    }
+    if (this.modal) {
+      this.modal.addEventListener('click', (e) => {
+        if (e.target === this.modal) this.closeModal();
+      });
+    }
+
+    this.layerRows.forEach(row => {
+      row.addEventListener('click', () => {
+        const layerKey = row.dataset.layer;
+        this.selectLayer(layerKey, row);
+      });
+    });
+  }
+
+  openModal() {
+    if (this.modal) {
+      this.modal.classList.add('open');
+      if (window.soundSystem) window.soundSystem.playLightPulse();
+      // Select core layer by default
+      const coreRow = document.querySelector('.cable-layer-row[data-layer="layer6"]');
+      if (coreRow) this.selectLayer('layer6', coreRow);
+    }
+  }
+
+  closeModal() {
+    if (this.modal) {
+      this.modal.classList.remove('open');
+    }
+  }
+
+  selectLayer(key, targetRow) {
+    const data = this.layersData[key];
+    if (!data) return;
+
+    this.layerRows.forEach(r => r.classList.remove('active'));
+    if (targetRow) targetRow.classList.add('active');
+
+    if (this.layerTitle) this.layerTitle.textContent = data.name;
+    if (this.layerDesc) this.layerDesc.textContent = data.desc;
+    if (this.layerPhysics) this.layerPhysics.textContent = data.physics;
+    if (this.layerThickness) this.layerThickness.textContent = data.thickness;
+
+    // Highlight corresponding SVG ring
+    this.svgLayers.forEach(ring => {
+      if (ring.dataset.layer === key) {
+        ring.setAttribute('stroke', '#B9F36A');
+        ring.setAttribute('stroke-width', '4');
+      } else {
+        ring.setAttribute('stroke', 'rgba(54, 217, 154, 0.4)');
+        ring.setAttribute('stroke-width', '1.5');
+      }
+    });
+
+    if (window.soundSystem) window.soundSystem.playChirp(840, 0.04);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  window.cablePeekManager = new CablePeekManager();
+});
+
+/**
+ * FOLLOW THE PACKET â€” ISP & BGP TOPOLOGY GRAPH MANAGER
+ * Interactive simulation of autonomous systems (AS), peering points, and routing tables.
+ */
+
+class TopologyManager {
+  constructor() {
+    this.nodes = document.querySelectorAll('.topology-node-card');
+    this.traceBtn = document.getElementById('btn-trace-isp');
+    this.bgpAsnDisplay = document.getElementById('isp-asn-display');
+    this.bgpHopDisplay = document.getElementById('isp-hop-display');
+    this.bgpLatencyDisplay = document.getElementById('isp-latency-display');
+    this.bgpStatusDisplay = document.getElementById('isp-status-display');
+
+    this.hops = [
+      {
+        id: 'tier1',
+        title: 'Tier 1 Global Backbone',
+        asn: 'AS3356 (Lumen / Level 3)',
+        latency: '+4.2 ms',
+        status: 'BGP Route Active [PREFIX 104.21.0.0/16]',
+        protocol: 'BGP-4 / MPLS LSP'
+      },
+      {
+        id: 'ixp',
+        title: 'Internet Exchange Point (IXP)',
+        asn: 'DE-CIX / NIXI Mumbai Peering',
+        latency: '+2.8 ms',
+        status: 'Settlement-Free Direct Peering 100Gbps',
+        protocol: 'Ethernet Fabric 802.3ba'
+      },
+      {
+        id: 'tier2',
+        title: 'Tier 2 National ISP Core',
+        asn: 'AS55836 (National Fiber Carrier)',
+        latency: '+6.1 ms',
+        status: 'Core Aggregation Router [OSPF Area 0]',
+        protocol: 'DWDM Metro Ring'
+      },
+      {
+        id: 'tier3',
+        title: 'Tier 3 Central Office (OLT)',
+        asn: 'Local Exchange Office',
+        latency: '+3.4 ms',
+        status: 'GPON Optical Line Terminal Active',
+        protocol: 'ITU-T G.984 GPON 2.5G'
+      },
+      {
+        id: 'neighborhood',
+        title: 'Neighborhood Fiber Cabinet',
+        asn: 'Street Distribution Pedestal',
+        latency: '+1.1 ms',
+        status: 'Passive Optical Splitter 1:32 Drop',
+        protocol: 'Single-mode Drop Cable'
+      }
+    ];
+
+    this.currentHopIndex = 0;
+    this.isTracing = false;
+
+    this.init();
+  }
+
+  init() {
+    if (this.nodes.length === 0) return;
+
+    this.nodes.forEach((node, idx) => {
+      node.addEventListener('click', () => {
+        this.selectHop(idx);
+      });
+    });
+
+    if (this.traceBtn) {
+      this.traceBtn.addEventListener('click', () => this.runTraceRoute());
+    }
+  }
+
+  selectHop(idx) {
+    this.currentHopIndex = idx;
+    const hop = this.hops[idx];
+
+    this.nodes.forEach(n => n.classList.remove('active-node'));
+    if (this.nodes[idx]) {
+      this.nodes[idx].classList.add('active-node');
+    }
+
+    if (this.bgpAsnDisplay) this.bgpAsnDisplay.textContent = hop.asn;
+    if (this.bgpHopDisplay) this.bgpHopDisplay.textContent = `HOP ${idx + 1} OF ${this.hops.length}`;
+    if (this.bgpLatencyDisplay) this.bgpLatencyDisplay.textContent = hop.latency;
+    if (this.bgpStatusDisplay) this.bgpStatusDisplay.textContent = hop.status;
+
+    if (window.soundSystem) window.soundSystem.playPacketHop();
+  }
+
+  runTraceRoute() {
+    if (this.isTracing) return;
+    this.isTracing = true;
+    let step = 0;
+
+    const interval = setInterval(() => {
+      this.selectHop(step);
+      step++;
+      if (step >= this.hops.length) {
+        clearInterval(interval);
+        this.isTracing = false;
+        if (window.soundSystem) window.soundSystem.playChirp(1100, 0.1, 'triangle');
+      }
+    }, 600);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  window.topologyManager = new TopologyManager();
+});
+
+/**
+ * FOLLOW THE PACKET â€” HOME ROUTER & NAT TRAFFIC SIMULATOR
+ * Interactive demonstration of Network Address Translation (NAT) and local device beamforming.
+ */
+
+class RouterSimulator {
+  constructor() {
+    this.deviceItems = document.querySelectorAll('.subnet-device-item');
+    this.natSourceDisplay = document.getElementById('nat-source-display');
+    this.natDestDisplay = document.getElementById('nat-dest-display');
+    this.natPortDisplay = document.getElementById('nat-port-display');
+    this.natStatusDisplay = document.getElementById('nat-status-display');
+    this.burstBtn = document.getElementById('btn-traffic-burst');
+    this.antennaWaves = document.querySelectorAll('.signal-arc');
+
+    this.deviceData = {
+      laptop: {
+        name: 'Workstation Laptop',
+        ip: '192.168.1.102',
+        port: 'TCP 443 (HTTPS)',
+        protocol: 'Wi-Fi 6 (802.11ax 5GHz)',
+        status: 'DESTINATION MATCH â€” Forwarding primary webpage packet payload.',
+        isTarget: true
+      },
+      phone: {
+        name: 'Personal Smartphone',
+        ip: '192.168.1.145',
+        port: 'UDP 5060 (VoIP Push)',
+        protocol: 'Wi-Fi 6 (802.11ax 2.4GHz)',
+        status: 'Idle Keepalive â€” Filtered to separate local port.',
+        isTarget: false
+      },
+      tv: {
+        name: '4K Ultra HD Smart TV',
+        ip: '192.168.1.200',
+        port: 'TCP 8080 (Video Buffer)',
+        protocol: 'Gigabit Ethernet LAN 1',
+        status: 'Streaming Stream Video Chunk #4812 â€” Bypassing packet.',
+        isTarget: false
+      },
+      tablet: {
+        name: 'Reading Tablet',
+        ip: '192.168.1.118',
+        port: 'TCP 5228 (Push Notification)',
+        protocol: 'Wi-Fi 5 (802.11ac 5GHz)',
+        status: 'Background Sync â€” Not recipient.',
+        isTarget: false
+      }
+    };
+
+    this.init();
+  }
+
+  init() {
+    this.deviceItems.forEach(item => {
+      item.addEventListener('click', () => {
+        const devKey = item.dataset.device;
+        this.selectDevice(devKey, item);
+      });
+
+      item.addEventListener('mouseenter', () => {
+        const devKey = item.dataset.device;
+        this.selectDevice(devKey, item);
+      });
+    });
+
+    if (this.burstBtn) {
+      this.burstBtn.addEventListener('click', () => this.simulateBurst());
+    }
+  }
+
+  selectDevice(key, itemElement) {
+    const data = this.deviceData[key];
+    if (!data) return;
+
+    this.deviceItems.forEach(d => {
+      d.classList.remove('target-device');
+    });
+    if (itemElement) {
+      itemElement.classList.add('target-device');
+    }
+
+    if (this.natSourceDisplay) this.natSourceDisplay.textContent = 'WAN 198.51.100.24 : 49152';
+    if (this.natDestDisplay) this.natDestDisplay.textContent = `${data.ip} : ${data.port}`;
+    if (this.natPortDisplay) this.natPortDisplay.textContent = data.protocol;
+    if (this.natStatusDisplay) this.natStatusDisplay.textContent = data.status;
+
+    if (window.soundSystem) window.soundSystem.playChirp(600, 0.05, 'sawtooth');
+  }
+
+  simulateBurst() {
+    const leds = document.querySelectorAll('.led-bulb');
+    leds.forEach(led => {
+      led.style.background = '#B9F36A';
+      led.style.boxShadow = '0 0 14px #B9F36A';
+    });
+
+    if (window.soundSystem) window.soundSystem.playPacketHop();
+
+    setTimeout(() => {
+      leds.forEach(led => {
+        led.style.background = '';
+        led.style.boxShadow = '';
+      });
+    }, 1200);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  window.routerSimulator = new RouterSimulator();
+});
+
+/**
+ * FOLLOW THE PACKET â€” LATENCY LAB & SPEED OF LIGHT SIMULATOR
+ * Interactive physics comparisons and round-trip time (RTT) modeling.
+ */
+
+class LatencyLab {
+  constructor() {
+    this.presetButtons = document.querySelectorAll('.latency-preset-btn');
+    this.latencyDisplay = document.getElementById('lab-latency-num');
+    this.distanceDisplay = document.getElementById('lab-metric-distance');
+    this.hopsDisplay = document.getElementById('lab-metric-hops');
+    this.blinkRatioDisplay = document.getElementById('lab-metric-blink');
+    this.mediumDisplay = document.getElementById('lab-metric-medium');
+
+    this.fiberBar = document.getElementById('race-bar-fiber');
+    this.routerBar = document.getElementById('race-bar-router');
+    this.blinkBar = document.getElementById('race-bar-blink');
+
+    this.presets = {
+      edge: {
+        ms: 12,
+        dist: '110 km',
+        hops: '3 Hops',
+        blink: '29Ã— faster than a blink',
+        medium: 'Metro Terrestrial Fiber',
+        fiberPercent: 92,
+        routerPercent: 95
+      },
+      regional: {
+        ms: 38,
+        dist: '1,450 km',
+        hops: '7 Hops',
+        blink: '9Ã— faster than a blink',
+        medium: 'Domestic Trunk Fiber',
+        fiberPercent: 78,
+        routerPercent: 82
+      },
+      transoceanic: {
+        ms: 168,
+        dist: '13,800 km',
+        hops: '14 Hops',
+        blink: '2Ã— faster than a blink',
+        medium: 'Submarine Transatlantic / Indian Ocean Fiber',
+        fiberPercent: 52,
+        routerPercent: 58
+      },
+      leo: {
+        ms: 46,
+        dist: '1,800 km',
+        hops: '5 Hops',
+        blink: '7.6Ã— faster than a blink',
+        medium: 'LEO Ku/Ka-Band Laser Inter-Satellite Links',
+        fiberPercent: 74,
+        routerPercent: 80
+      },
+      geo: {
+        ms: 630,
+        dist: '71,570 km',
+        hops: '4 Hops',
+        blink: '1.8Ã— SLOWER than a blink',
+        medium: 'Geostationary Orbit 35,786 km Ã— 2 uplink/downlink',
+        fiberPercent: 18,
+        routerPercent: 24
+      }
+    };
+
+    this.currentNum = 42;
+    this.targetNum = 42;
+    this.animating = false;
+
+    this.init();
+  }
+
+  init() {
+    this.presetButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const key = btn.dataset.preset;
+        this.selectPreset(key, btn);
+      });
+    });
+
+    // Initial default: Transoceanic
+    const defaultBtn = document.querySelector('.latency-preset-btn[data-preset="transoceanic"]');
+    if (defaultBtn) {
+      this.selectPreset('transoceanic', defaultBtn);
+    }
+  }
+
+  selectPreset(key, btnElement) {
+    const data = this.presets[key];
+    if (!data) return;
+
+    this.presetButtons.forEach(b => b.classList.remove('active'));
+    if (btnElement) btnElement.classList.add('active');
+
+    this.animateNumber(data.ms);
+
+    if (this.distanceDisplay) this.distanceDisplay.textContent = data.dist;
+    if (this.hopsDisplay) this.hopsDisplay.textContent = data.hops;
+    if (this.blinkRatioDisplay) this.blinkRatioDisplay.textContent = data.blink;
+    if (this.mediumDisplay) this.mediumDisplay.textContent = data.medium;
+
+    if (this.fiberBar) this.fiberBar.style.width = `${data.fiberPercent}%`;
+    if (this.routerBar) this.routerBar.style.width = `${data.routerPercent}%`;
+    if (this.blinkBar) this.blinkBar.style.width = '65%'; // Constant human eye blink reference
+
+    if (window.soundSystem) window.soundSystem.playLightPulse();
+  }
+
+  animateNumber(target) {
+    const start = this.currentNum;
+    const diff = target - start;
+    const duration = 500;
+    const startTime = performance.now();
+
+    const update = (now) => {
+      const elapsed = now - startTime;
+      const progress = Math.min(1, elapsed / duration);
+      // Ease out expo
+      const ease = 1 - Math.pow(2, -10 * progress);
+      const val = Math.round(start + diff * ease);
+      
+      this.currentNum = val;
+      if (this.latencyDisplay) {
+        this.latencyDisplay.textContent = `${val}`;
+      }
+
+      if (progress < 1) {
+        requestAnimationFrame(update);
+      } else {
+        this.currentNum = target;
+        if (this.latencyDisplay) this.latencyDisplay.textContent = `${target}`;
+      }
+    };
+
+    requestAnimationFrame(update);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  window.latencyLab = new LatencyLab();
+});
+
+/**
+ * FOLLOW THE PACKET â€” AI EXPLORER & KNOWLEDGE HUB
+ * Curated intelligent interactive answers with Dual Mode (Simple vs Technical).
+ */
+
+class AIExplorer {
+  constructor() {
+    this.questionChips = document.querySelectorAll('.question-chip');
+    this.queryHeading = document.getElementById('ai-query-heading');
+    this.answerText = document.getElementById('ai-answer-text');
+    this.diagramText = document.getElementById('ai-diagram-text');
+    this.takeawayText = document.getElementById('ai-takeaway-text');
+    this.simpleBtn = document.getElementById('btn-mode-simple');
+    this.techBtn = document.getElementById('btn-mode-tech');
+    this.searchInput = document.getElementById('ai-search-input');
+
+    this.currentMode = 'simple'; // 'simple' or 'tech'
+    this.currentKey = 'q1';
+
+    this.knowledgeBase = {
+      q1: {
+        question: 'Why does the internet need undersea cables instead of satellites?',
+        simple: {
+          answer: 'Imagine trying to move an ocean of water through garden hoses in the sky versus massive underground aqueducts. Submarine fiber-optic cables use lasers inside solid glass strands to carry over 99% of global internet traffic. Satellites suffer from weather interference, limited radio spectrum, and high atmospheric attenuation.',
+          diagram: 'Undersea Cable: Direct Point A âž” Point B (Pure Light @ 200,000 km/s)\nSatellite: Ground âž” 36,000 km into Space âž” Ground (~600ms latency)',
+          takeaway: 'Cables provide nearly infinite bandwidth, extreme reliability, and lightspeed latency that wireless space networks cannot physically match.'
+        },
+        tech: {
+          answer: 'Dense Wavelength Division Multiplexing (DWDM) enables a single fiber pair in a modern subsea cable (like Google Grace Hopper or AmitiÃ©) to transmit over 340 Terabits per second across 16 fiber pairs using C+L optical spectrum bands. By contrast, satellite constellations face strict Shannon-Hartley capacity limits on RF spectrum and require complex ground station downlinks.',
+          diagram: 'DWDM Optical Spectrum: 96 channels Ã— 400 Gbps per fiber pair = 38.4 Tbps/pair\nAtmospheric Absorption: Oxygen & water vapor bands introduce RF phase noise.',
+          takeaway: 'Undersea fiber delivers petabit-scale aggregate throughput with sub-microsecond optical repeater jitter.'
+        }
+      },
+      q2: {
+        question: 'What happens if an undersea cable breaks or is cut?',
+        simple: {
+          answer: 'The internet does not collapse because it is designed like a vast web rather than a single wire. When an anchor or underwater earthquake snaps a cable, smart routers automatically detect the silence within milliseconds and reroute your packets along alternative cables across different continents.',
+          diagram: 'Cable Cut at Location X âž” Automated BGP Alert (ms) âž” Traffic rerouted around the globe.',
+          takeaway: 'Redundancy is the secret superpower of the internet: there is never just one path.'
+        },
+        tech: {
+          answer: 'BGP (Border Gateway Protocol) autonomous systems use BFD (Bidirectional Forwarding Detection) to sense link loss in sub-50 milliseconds. Once an optical circuit LOS (Loss of Signal) is confirmed, interior gateway protocols (IS-IS/OSPF) converge, and BGP withdraws the dead prefix, shifting transit to pre-calculated MPLS Fast Reroute (FRR) backup tunnels.',
+          diagram: 'Optical Time Domain Reflectometer (OTDR) pulses locate break distance Â±10m âž” Specialized cable ship dispatched to grapple & splice fiber on seabed.',
+          takeaway: 'Global mesh topology and automated BGP convergence isolate physical cuts before end-users notice dropped sessions.'
+        }
+      },
+      q3: {
+        question: 'Why does distance affect latency if light travels so fast?',
+        simple: {
+          answer: 'Light is fast (300,000 km/s in empty space), but inside glass fiber cables, it slows down by about 30% due to the optical density of silica glass. Furthermore, your data does not travel in a straight line; it zigzags through roads, oceans, and stops at multiple switching computers along the way.',
+          diagram: 'Speed in Vacuum: 300,000 km/s\nSpeed in Glass Fiber: ~204,000 km/s (Index of Refraction n â‰ˆ 1.47)\nRouting Delays: Buffering + Queuing + NAT + Inspection.',
+          takeaway: 'Physics sets a hard floor: a round trip between New York and Mumbai across 13,000 km of glass can never physically be faster than ~130 milliseconds.'
+        },
+        tech: {
+          answer: 'Optical propagation delay in standard single-mode fiber (G.652 SMF) is approximately 4.9 microseconds per kilometer. On top of physical distance, serialization latency, queue buffer bloat, and store-and-forward packet processing at each router add cumulative microseconds that compound across 15+ network hops.',
+          diagram: 'Total RTT = 2 Ã— (Distance / c_glass) + Î£(Serialization + Queuing + Processing)\nRefraction index of fused silica: n = 1.4682 @ 1550nm wavelength.',
+          takeaway: 'Even with zero congestion, Einsteinâ€™s speed of light inside dielectric media dictates fundamental minimum latency.'
+        }
+      },
+      q4: {
+        question: 'How do packets find their way without a master computer?',
+        simple: {
+          answer: 'Think of packet delivery like postal sorting centers. No single postal worker knows every house on Earth. Instead, your local post office sends your letter to the regional hub, which sends it to the international airport, which sends it to the destination city hub, down to your local mail carrier. Each router only needs to know the best next hop.',
+          diagram: 'Source âž” Local Router âž” Regional ISP âž” Global Backbone âž” Destination ISP âž” Target Device',
+          takeaway: 'Decentralized routing makes the internet indestructible: any individual computer can fail without stopping the system.'
+        },
+        tech: {
+          answer: 'Routers maintain Autonomous System Routing Tables through BGP-4. Every few seconds, routers announce IP prefix reachability and AS-Path attributes. Algorithms like Dijkstraâ€™s Shortest Path First (SPF) compute optimal egress interfaces, populating high-speed Ternary Content Addressable Memory (TCAM) for line-rate hardware forwarding.',
+          diagram: 'FIB (Forwarding Information Base) lookup occurs in hardware silicon in <10 nanoseconds per packet.',
+          takeaway: 'Decentralized path-vector routing dynamically navigates over 900,000 global BGP routing prefixes.'
+        }
+      },
+      q5: {
+        question: 'What is inside a packet? Can anyone read it along the way?',
+        simple: {
+          answer: 'A packet is wrapped like an envelope. The outside (Header) shows the return address (Source IP) and destination address (Destination IP) so routers know where to deliver it. The inside (Payload) contains your actual dataâ€”which today is encrypted with HTTPS/TLS into unreadable scrambled gibberish for anyone snooping on the wire.',
+          diagram: '[ IP Header: From/To ] + [ TCP Header: Order # ] + [ ENCRYPTED PAYLOAD: ###... ] + [ Checksum ]',
+          takeaway: 'Routers read the outside label to steer the packet, but modern end-to-end encryption keeps your private content locked.'
+        },
+        tech: {
+          answer: 'A standard IPv4/TCP packet consists of a 20-byte IP header (version, TTL, protocol 6, source/destination 32-bit IPs), a 20-byte TCP header (source/dest ports, sequence number, ACK flags, window size), followed by the Maximum Segment Size (MSS ~1460 bytes) payload encrypted with TLS 1.3 AES-GCM or ChaCha20-Poly1305.',
+          diagram: 'Layer 3: IP (Addresses, TTL) âž” Layer 4: TCP (Sequencing, Flow Control) âž” Layer 7: TLS/HTTPS ciphertext.',
+          takeaway: 'Zero-trust cryptographic protocols guarantee data integrity and confidentiality across untrusted international transit backbones.'
+        }
+      },
+      q6: {
+        question: 'Why does video stream smoothly while gaming lags over the same connection?',
+        simple: {
+          answer: 'Video streaming can look ahead and store 30 seconds of video in a "buffer" on your device. If your connection hiccups for a fraction of a second, the video keeps playing seamlessly from memory. In competitive multiplayer gaming, the future cannot be buffered because your opponentâ€™s move has not happened yet! Every millisecond delay is felt instantly.',
+          diagram: 'Video: Pre-loads 10,000 packets ahead of time in memory (Buffer)\nGaming: Needs real-time packet exchange right now (Zero buffering possible)',
+          takeaway: 'Bandwidth (how much data fits) is very different from Latency (how fast a single packet responds).'
+        },
+        tech: {
+          answer: 'Video uses TCP with large sliding receive windows and chunked HTTP adaptive bitrate streaming (HLS/DASH), tolerating retransmissions and jitter via deep player ring buffers. Gaming protocols use UDP with immediate unacknowledged state updates; any packet loss or jitter above 50ms results in visible rubber-banding or frame desync.',
+          diagram: 'TCP HLS: High throughput + Deep client buffer = Zero perception of jitter\nUDP Game Netcode: Low throughput + Zero buffer = High sensitivity to jitter & queuing spikes.',
+          takeaway: 'Streaming optimizes for cumulative bandwidth; gaming is constrained by instantaneous round-trip jitter.'
+        }
+      }
+    };
+
+    this.init();
+  }
+
+  init() {
+    this.questionChips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        const qKey = chip.dataset.q;
+        this.selectQuestion(qKey, chip);
+      });
+    });
+
+    if (this.simpleBtn && this.techBtn) {
+      this.simpleBtn.addEventListener('click', () => this.setMode('simple'));
+      this.techBtn.addEventListener('click', () => this.setMode('tech'));
+    }
+
+    if (this.searchInput) {
+      this.searchInput.addEventListener('input', (e) => this.handleSearch(e.target.value));
+    }
+
+    // Select first question
+    const firstChip = document.querySelector('.question-chip[data-q="q1"]');
+    if (firstChip) this.selectQuestion('q1', firstChip);
+  }
+
+  setMode(mode) {
+    this.currentMode = mode;
+    if (mode === 'simple') {
+      if (this.simpleBtn) this.simpleBtn.classList.add('active');
+      if (this.techBtn) this.techBtn.classList.remove('active');
+    } else {
+      if (this.techBtn) this.techBtn.classList.add('active');
+      if (this.simpleBtn) this.simpleBtn.classList.remove('active');
+    }
+    this.renderCurrentContent();
+    if (window.soundSystem) window.soundSystem.playChirp(720, 0.04);
+  }
+
+  selectQuestion(key, chipElement) {
+    this.currentKey = key;
+    this.questionChips.forEach(c => c.classList.remove('active'));
+    if (chipElement) chipElement.classList.add('active');
+
+    this.renderCurrentContent();
+    if (window.soundSystem) window.soundSystem.playPacketHop();
+  }
+
+  renderCurrentContent() {
+    const data = this.knowledgeBase[this.currentKey];
+    if (!data) return;
+
+    const content = data[this.currentMode];
+
+    if (this.queryHeading) this.queryHeading.textContent = data.question;
+    if (this.answerText) this.answerText.textContent = content.answer;
+    if (this.diagramText) this.diagramText.textContent = content.diagram;
+    if (this.takeawayText) this.takeawayText.textContent = `â€œ${content.takeaway}â€`;
+  }
+
+  handleSearch(query) {
+    const term = query.toLowerCase().trim();
+    this.questionChips.forEach(chip => {
+      const text = chip.textContent.toLowerCase();
+      if (!term || text.includes(term)) {
+        chip.style.display = 'flex';
+      } else {
+        chip.style.display = 'none';
+      }
+    });
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  window.aiExplorer = new AIExplorer();
+});
+
+/**
+ * FOLLOW THE PACKET â€” MAIN APPLICATION ORCHESTRATOR
+ * Section observers, scroll synchronization, HUD telemetry, and interactive controls.
+ */
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Elements
+  const sections = document.querySelectorAll('.journey-section');
+  const railSteps = document.querySelectorAll('.rail-step');
+  const railProgressFill = document.querySelector('.rail-progress-fill');
+  const soundToggleBtn = document.getElementById('btn-sound-toggle');
+  const soundIcon = document.getElementById('sound-icon');
+  const restartBtns = document.querySelectorAll('.btn-replay-journey');
+  const startJourneyBtns = document.querySelectorAll('.btn-start-journey');
+  
+  // Telemetry HUD Elements
+  const hudHop = document.getElementById('hud-hop-val');
+  const hudStage = document.getElementById('hud-stage-val');
+  const hudLatency = document.getElementById('hud-latency-val');
+
+  const stageTelemetry = {
+    'hero': { hop: '00/05', stage: 'INIT_REQUEST', latency: '0 ms' },
+    'datacenter': { hop: '01/05', stage: 'ORIGIN_SERVER', latency: '2.4 ms' },
+    'ocean': { hop: '02/05', stage: 'SUBSEA_CABLE', latency: '68.2 ms' },
+    'isp': { hop: '03/05', stage: 'ISP_CORE_BGP', latency: '92.5 ms' },
+    'router': { hop: '04/05', stage: 'LOCAL_GATEWAY', latency: '98.1 ms' },
+    'device': { hop: '05/05', stage: 'DESTINATION_RENDER', latency: '104 ms' },
+    'latency-lab': { hop: '05/05', stage: 'LAB_SIMULATION', latency: '42 ms' },
+    'ai-explorer': { hop: '05/05', stage: 'KNOWLEDGE_BASE', latency: '0.1 ms' },
+    'takeaway': { hop: '05/05', stage: 'JOURNEY_COMPLETE', latency: '104 ms' }
+  };
+
+  // Section Observer for Journey HUD and Rail
+  const observerOptions = {
+    root: null,
+    rootMargin: '-30% 0px -30% 0px',
+    threshold: 0
+  };
+
+  const sectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        updateActiveSection(id);
+      }
+    });
+  }, observerOptions);
+
+  sections.forEach(sec => sectionObserver.observe(sec));
+
+  function updateActiveSection(sectionId) {
+    // Update Rail Steps
+    railSteps.forEach(step => {
+      if (step.dataset.target === sectionId) {
+        step.classList.add('active');
+      } else {
+        step.classList.remove('active');
+      }
+    });
+
+    // Update Telemetry Pill
+    const data = stageTelemetry[sectionId];
+    if (data) {
+      if (hudHop) hudHop.textContent = data.hop;
+      if (hudStage) hudStage.textContent = data.stage;
+      if (hudLatency) hudLatency.textContent = data.latency;
+    }
+
+    // Play subtle audio cue on journey advance
+    if (window.soundSystem && sectionId !== 'hero') {
+      window.soundSystem.playPacketHop();
+    }
+  }
+
+  // Scroll Progress Rail calculation
+  window.addEventListener('scroll', () => {
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = docHeight > 0 ? (window.scrollY / docHeight) * 100 : 0;
+    if (railProgressFill) {
+      railProgressFill.style.height = `${progress}%`;
+    }
+  }, { passive: true });
+
+  // Sound Toggle Handler
+  if (soundToggleBtn) {
+    soundToggleBtn.addEventListener('click', () => {
+      if (!window.soundSystem) return;
+      const isMuted = window.soundSystem.toggleMute();
+      if (isMuted) {
+        soundToggleBtn.setAttribute('title', 'Sound: Muted (Click to enable audio)');
+        soundToggleBtn.classList.remove('active');
+        if (soundIcon) {
+          soundIcon.innerHTML = `
+            <path d="M11 5L6 9H2V15H6L11 19V5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <line x1="23" y1="9" x2="17" y2="15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="17" y1="9" x2="23" y2="15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          `;
+        }
+      } else {
+        soundToggleBtn.setAttribute('title', 'Sound: Active (Click to mute)');
+        soundToggleBtn.classList.add('active');
+        if (soundIcon) {
+          soundIcon.innerHTML = `
+            <path d="M11 5L6 9H2V15H6L11 19V5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          `;
+        }
+      }
+    });
+  }
+
+  // Smooth Action Buttons
+  startJourneyBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const targetSec = document.getElementById('datacenter');
+      if (targetSec) {
+        targetSec.scrollIntoView({ behavior: 'smooth' });
+        if (window.soundSystem) window.soundSystem.playLightPulse();
+      }
+    });
+  });
+
+  restartBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (window.soundSystem) window.soundSystem.playLightPulse();
+    });
+  });
+
+  // Navigation click links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      const targetId = this.getAttribute('href').substring(1);
+      const targetElement = document.getElementById(targetId);
+      if (targetElement) {
+        e.preventDefault();
+        targetElement.scrollIntoView({ behavior: 'smooth' });
+        if (window.soundSystem) window.soundSystem.playChirp(800, 0.04);
+      }
+    });
+  });
+
+  // Keyboard navigation accessibility
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      const openModal = document.querySelector('.modal-backdrop.open');
+      if (openModal) {
+        openModal.classList.remove('open');
+      }
+    }
+  });
+});
+
+</script>
+</body>
+</html>
+
